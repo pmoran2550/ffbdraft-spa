@@ -1,39 +1,39 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { BASE_API_URL } from '../constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'https://api.example.com'; // Replace with your API URL
-
   constructor(private http: HttpClient) { }
 
   // Methods for API calls will go here
   // GET request
   getData(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/data`);
+    return this.http.get(`${BASE_API_URL}/data`);
   }
 
   // GET request with parameter
-  getItemById(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/items/${id}`);
+  getItemById(parameter: number): Observable<any> {
+    console.log("before call");
+    return this.http.get<any>(`${BASE_API_URL}/api/players/year/${parameter}`);
   }
 
   // POST request
   createItem(item: any): Observable<any> {
-    return this.http.post(`${this.apiUrl}/items`, item);
+    return this.http.post(`${BASE_API_URL}/items`, item);
   }
 
   // PUT request
   updateItem(id: number, item: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/items/${id}`, item);
+    return this.http.put(`${BASE_API_URL}/items/${id}`, item);
   }
 
   // DELETE request
   deleteItem(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/items/${id}`);
+    return this.http.delete(`${BASE_API_URL}/items/${id}`);
   }
 }
 

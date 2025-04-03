@@ -1,1 +1,10 @@
-<p>home works!</p>
+<h1 class="header-class">Fantasy Football Draft List: 2025</h1>
+
+<div class="players" *ngIf="playerData$ | async as players">
+    <app-player-card *ngFor="let item of players"
+        [player]="item">
+
+    </app-player-card>
+    </div>
+
+  

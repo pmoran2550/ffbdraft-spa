@@ -32,6 +32,8 @@
           },
           "configurations": {
             "production": {
+              "sourceMap":true,
+              "optimization": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -52,7 +54,7 @@
               "sourceMap": true
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
