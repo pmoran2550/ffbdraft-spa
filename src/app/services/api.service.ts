@@ -16,9 +16,8 @@ export class ApiService {
   }
 
   // GET request with parameter
-  getItemById(parameter: number): Observable<any> {
-    console.log("before call");
-    return this.http.get<any>(`${BASE_API_URL}/api/players/year/${parameter}`);
+  getRequest(url: string): Observable<any> {
+    return this.http.get<any>(url);
   }
 
   // POST request

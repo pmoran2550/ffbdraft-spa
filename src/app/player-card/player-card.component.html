@@ -3,8 +3,11 @@
         <mat-card-header>
             <mat-card-title>{{ player.rank}} {{ player.name}}</mat-card-title>
         </mat-card-header>
-        <mat-card-content>
-            Pos: {{ player.position}}  Team:{{ player.nflTeam}}  Bye:{{ player.byeWeek}}
+        <mat-card-content class="content-parent">
+            <div class="content-item">Pos: {{ player.position}}</div>
+            <div class="content-item">Team: {{ player.nflTeam}}</div>  
+            <div class="content-item">Bye: {{ player.byeWeek}}</div>
+            <div class="content-item">FFB Team: {{ player.ffbTeam}}</div>
         </mat-card-content>
     </mat-card>
 </div>

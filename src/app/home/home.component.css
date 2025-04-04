@@ -3,6 +3,6 @@
 }
 
 .players {
-    max-width: 400px;
-    margin: 50px;
+    width: 30%;
+    margin: 0 auto;
 }
