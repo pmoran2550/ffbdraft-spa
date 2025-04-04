@@ -9,6 +9,8 @@ import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { MatCardModule} from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox'
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +26,9 @@ import { MatCardModule} from '@angular/material/card';
     HttpClientModule,
     RouterModule,
     AsyncPipe,
-    MatCardModule
+    MatCardModule,
+    MatCheckboxModule,
+    FormsModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

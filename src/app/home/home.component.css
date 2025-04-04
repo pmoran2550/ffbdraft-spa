@@ -6,3 +6,13 @@
     width: 30%;
     margin: 0 auto;
 }
+
+.filters {
+    width: 30%;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+.position-checkbox {
+    margin: 5px;
+}

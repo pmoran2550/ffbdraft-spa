@@ -1,7 +1,45 @@
 <h1 class="header-class">Fantasy Football Draft List: 2025</h1>
 
+<div class="filters">
+    <mat-checkbox class="position-checkbox" #AllCheckbox 
+        [(ngModel)] = "showAll" 
+        (change)="positionFilterChanged($event, 'All')" 
+        color="primary">All
+    </mat-checkbox>
+    <mat-checkbox class="position-checkbox" #QBCheckbox 
+        [(ngModel)] = "showQB" 
+        (change)="positionFilterChanged($event, 'QB')" 
+        color="primary">QB
+    </mat-checkbox>
+    <mat-checkbox class="position-checkbox" #RBCheckbox 
+        [(ngModel)] = "showRB" 
+        (change)="positionFilterChanged($event, 'RB')" 
+        color="primary">RB
+    </mat-checkbox>
+    <mat-checkbox class="position-checkbox" #WRCheckbox 
+        [(ngModel)] = "showWR" 
+        (change)="positionFilterChanged($event, 'WR')" 
+        color="primary">WR
+    </mat-checkbox>
+    <mat-checkbox class="position-checkbox" #TECheckbox 
+        [(ngModel)] = "showTE" 
+        (change)="positionFilterChanged($event, 'TE')" 
+        color="primary">TE
+    </mat-checkbox>
+    <mat-checkbox class="position-checkbox" #KCheckbox 
+        [(ngModel)] = "showK" 
+        (change)="positionFilterChanged($event, 'K')" 
+        color="primary">K
+    </mat-checkbox>
+    <mat-checkbox class="position-checkbox" #DEFCheckbox 
+        [(ngModel)] = "showDEF" 
+        (change)="positionFilterChanged($event, 'DEF')" 
+        color="primary">DEF
+    </mat-checkbox>
+</div>
+
 <div class="players" *ngIf="playerData$ | async as players">
-    <app-player-card *ngFor="let item of players"
+    <app-player-card *ngFor="let item of filteredPlayerData"
         [player]="item">
 
     </app-player-card>
