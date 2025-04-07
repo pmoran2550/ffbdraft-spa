@@ -1,0 +1,6 @@
+<h1 class="header-class">Teams</h1>
+
+<div class="teams" *ngIf="teamData$ | async as teams">
+    <app-team-card *ngFor="let item of teams" [team]="item">
+    </app-team-card>
+</div>

@@ -1,0 +1,14 @@
+.team-card {
+    margin-bottom: 10px;
+    background-color:lightblue;
+  }
+
+.content-parent {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-evenly;
+  }
+
+.content-item {
+    flex-basis: auto;
+  }
