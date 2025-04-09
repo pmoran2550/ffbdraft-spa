@@ -16,3 +16,27 @@
 .position-checkbox {
     margin: 5px;
 }
+
+.loading-message {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 1.8rem;
+}
+
+.error-message {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    color: #dc3545;
+    padding: 1rem;
+    font-size: 1.8rem;
+  }
+  
+  .error-icon {
+    display: flex;
+    justify-content: center;
+    color: #dc3545;
+    font-size: 5rem;
+  }
+  

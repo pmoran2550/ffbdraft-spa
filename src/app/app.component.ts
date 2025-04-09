@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox'
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,8 @@ import { FormsModule } from '@angular/forms';
     AsyncPipe,
     MatCardModule,
     MatCheckboxModule,
-    FormsModule
+    FormsModule,
+    FontAwesomeModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

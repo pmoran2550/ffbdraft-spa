@@ -1,17 +1,19 @@
 import { Component, OnInit,  } from '@angular/core';
-import { BehaviorSubject, map, Observable, tap } from 'rxjs';
-import { NgFor, AsyncPipe, NgIf } from '@angular/common';
+import { finalize, map, Observable, Subscription, tap } from 'rxjs';
+import { NgFor, NgIf } from '@angular/common';
 import { player } from '../models/player';
 import { PlayerCardComponent } from "../player-card/player-card.component";
 import { PlayerService } from '../services/player.service';
-import { Position } from '../models/position';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, AsyncPipe, PlayerCardComponent, MatCheckbox, FormsModule],
+  imports: [NgFor, NgIf, PlayerCardComponent, MatCheckbox, FormsModule, FontAwesomeModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -27,6 +29,10 @@ export class HomeComponent implements OnInit {
   showTE: boolean = true;
   showK: boolean = true;
   showDEF: boolean = true;
+  isLoading: boolean = true;
+  private playerDataSubscription?: Subscription;
+  errorMsg: string = "";
+  faExclamationTriangle = faExclamationTriangle;
 
   constructor(private playerService: PlayerService) {}
 
@@ -40,26 +46,45 @@ export class HomeComponent implements OnInit {
       map(players => players.map((player: any) => ({
         ...player,
         ffbTeam: this.getFFBTeamName(player.ffbTeam)
-      })))
+      }))),
+      finalize(() => {
+        this.isLoading = false;
+        this.sort();
+        this.filter();    
+      })
     );
-    this.sort();
-    this.filter();
+
+    const subscription = this.playerData$.subscribe({
+      next: processedPlayers => {
+        console.log('Player data loaded:', processedPlayers);
+        // Add your data handling logic here
+        this.playerData = processedPlayers;
+        this.filteredPlayerData = processedPlayers;
+  
+      },
+      error: err => {
+        console.error('Error loading player data:', err);
+        this.filteredPlayerData = [];
+        if (err instanceof HttpErrorResponse) {
+          this.errorMsg = err.message;
+        } else {
+          this.errorMsg = "Unknown error";
+        }
+        // Add error handling logic here
+      }
+    });
+  
+    // Store subscription if needed for cleanup
+    this.playerDataSubscription?.unsubscribe(); // Cleanup previous
+    this.playerDataSubscription = subscription;
   }
 
   sort(){
-    if (this.playerData$ != undefined)
+    if (this.playerData.length > 0)
     {
-      this.playerData$ = this.playerData$.pipe(map((data) => {
-      data.sort((a, b) => {
-          return a.rank < b.rank ? -1 : 1;
-      });
-      this.playerData = data;
-      this.filteredPlayerData = data;
-      return data;
-      }))
+      this.playerData.sort((a, b) => a.rank - b.rank);
     }
   }
-
 
   filter() {
     if (this.playerData.length > 0) {
@@ -116,6 +141,9 @@ export class HomeComponent implements OnInit {
     this.filter();
   }
     
+  ngOnDestroy() {
+    this.playerDataSubscription?.unsubscribe();
+  }
 }
 
 export const POSITION_MAP: { [key: string]: string } = {

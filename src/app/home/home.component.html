@@ -38,11 +38,25 @@
     </mat-checkbox>
 </div>
 
-<div class="players" *ngIf="playerData$ | async as players">
-    <app-player-card *ngFor="let item of filteredPlayerData"
-        [player]="item">
-
-    </app-player-card>
+<div class="loading-message" *ngIf="isLoading; else content">
+    Loading...
 </div>
 
+<ng-template #content>    
+    <div class="players" *ngIf="filteredPlayerData.length > 0; else noData">
+
+    
+        <app-player-card *ngFor="let item of filteredPlayerData"
+        [player]="item">
+
+        </app-player-card>
+    </div>
+    <ng-template  #noData>
+        <div >
+            <span class="error-icon"><fa-icon class="error-icon" [icon]="faExclamationTriangle"></fa-icon></span>
+            <span class="error-message">Error!</span>
+            <span class="error-message">{{ errorMsg }}</span>
+        </div>
+    </ng-template>
+</ng-template>
   
