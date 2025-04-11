@@ -44,8 +44,6 @@
 
 <ng-template #content>    
     <div class="players" *ngIf="filteredPlayerData.length > 0; else noData">
-
-    
         <app-player-card *ngFor="let item of filteredPlayerData"
         [player]="item">
 

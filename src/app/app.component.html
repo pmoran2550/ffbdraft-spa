@@ -2,15 +2,28 @@
   <mat-toolbar color="primary">
     <span>FFB Draft</span>
     <span class="spacer"></span>
+
     <div class="hide-on-mobile">
       <button mat-button [routerLink]="['/app-home']">
         <mat-icon>home</mat-icon>
         Home
         </button>
-      <button mat-button [routerLink]="['/teams']">Teams</button>
-      <button mat-button [routerLink]="['/app-about']">About</button>
-      <button mat-button [routerLink]="['/app-contact']">Contact</button>
+      <ng-container *ngIf="isAuthenticated$ | async">
+        <button mat-button [routerLink]="['/teams']">Teams</button>
+      </ng-container>
+      <button mat-button [routerLink]="['/app-about']">About</button>  
     </div>
+    <div *ngIf="isAuthenticated$ | async; else unAuthenticated">
+      <app-logout-button></app-logout-button>
+    </div>
+    <ng-template #unAuthenticated>
+      <app-login-button></app-login-button>
+    </ng-template>
+
+    <ng-container *ngIf="user$ | async as user">
+      <img [src]="user.picture" class="user-picture"/>
+    </ng-container>
+
   </mat-toolbar>
 
   <mat-menu #menu="matMenu">

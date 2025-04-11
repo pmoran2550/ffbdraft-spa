@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, tap, throwError } from 'rxjs';
 import { BASE_API_URL } from '../constants';
 
 @Injectable({

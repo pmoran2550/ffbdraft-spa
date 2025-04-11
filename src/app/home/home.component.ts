@@ -39,6 +39,8 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     console.log("on init");
     this.getPlayerData(2024);
+
+    
   }
   
   getPlayerData(year: number) {
@@ -56,7 +58,7 @@ export class HomeComponent implements OnInit {
 
     const subscription = this.playerData$.subscribe({
       next: processedPlayers => {
-        console.log('Player data loaded:', processedPlayers);
+        console.log('Player data loaded');
         // Add your data handling logic here
         this.playerData = processedPlayers;
         this.filteredPlayerData = processedPlayers;
@@ -70,7 +72,6 @@ export class HomeComponent implements OnInit {
         } else {
           this.errorMsg = "Unknown error";
         }
-        // Add error handling logic here
       }
     });
   
