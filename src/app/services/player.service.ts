@@ -12,7 +12,7 @@ export class PlayerService {
 
     getItemById(parameter: number): Observable<any> {
       let reqUrl = `${BASE_API_URL}/api/players/year/${parameter}`;
-      return this.apiService.getRequest(reqUrl);
+      return this.apiService.getRequest(reqUrl, undefined);
     }
   
 }

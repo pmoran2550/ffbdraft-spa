@@ -6,3 +6,9 @@
     width: 30%;
     margin: 0 auto;
 }
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}

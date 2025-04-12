@@ -1,0 +1,21 @@
+.header-class {
+    text-align: center;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input-container > * {
+    margin: 0 30px;
+  }
+
+  .input-control {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .input-button {
+    margin: 0 30px;
+  }
