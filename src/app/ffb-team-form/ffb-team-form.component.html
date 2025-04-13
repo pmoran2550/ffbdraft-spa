@@ -6,17 +6,17 @@
         <mat-form-field >
             <mat-label>Team Name</mat-label>
             <input matInput id="name" formControlName="name">
-            <mat-error *ngIf="f['name'].invalid">Team name is required</mat-error>
+            <mat-error *ngIf="f['name'].invalid">Team name is required, 30 characters max.</mat-error>
         </mat-form-field>
         <mat-form-field >
             <mat-label>Team Manager</mat-label>
             <input matInput id="manager" formControlName="manager">
-            <mat-error *ngIf="f['manager'].invalid">Manager name is required</mat-error>
+            <mat-error *ngIf="f['manager'].invalid">Manager name is required, 30 characters max</mat-error>
         </mat-form-field>
         <mat-form-field >
             <mat-label>Manager Email</mat-label>
             <input matInput id="email" formControlName="email">
-            <mat-error *ngIf="f['email'].invalid">Email is invalid</mat-error>
+            <mat-error *ngIf="f['email'].invalid">Email is invalid, 30 characters max</mat-error>
         </mat-form-field>
         <mat-form-field >
             <mat-label>Third Party ID (optional)</mat-label>

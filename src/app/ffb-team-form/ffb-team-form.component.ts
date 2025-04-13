@@ -22,9 +22,9 @@ export class FfbTeamFormComponent implements OnInit {
   ngOnInit(): void {
     this.newTeamForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(30)]],
-      manager: ['', Validators.required, Validators.maxLength(30)],
-      email: ['', [Validators.required, Validators.email], Validators.maxLength(30)],
-      thirdpartyid: ['', Validators.maxLength(30)],
+      manager: ['', [Validators.required, Validators.maxLength(30)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]],
+      thirdpartyid: ['', Validators.maxLength(35)],
       nickname: ['', Validators.maxLength(30)]
     });
   }
