@@ -37,5 +37,9 @@
 <div mat-dialog-actions class="input-button">
   <button mat-button (click)="closeModal()">Cancel</button>
 </div>
+<div *ngIf="isErrorResponse">
+  <mat-label class="error-message">{{ postErrorMsg }}</mat-label>
+</div>
+
 
   

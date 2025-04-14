@@ -1,4 +1,4 @@
-import { Component, OnInit,  } from '@angular/core';
+import { Component, OnDestroy, OnInit,  } from '@angular/core';
 import { finalize, map, Observable, Subscription, tap } from 'rxjs';
 import { NgFor, NgIf } from '@angular/common';
 import { player } from '../models/player';
@@ -17,7 +17,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
   playerData$: Observable<player[]> | undefined;
   playerData: player[] = [];

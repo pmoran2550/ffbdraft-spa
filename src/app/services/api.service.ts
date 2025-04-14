@@ -21,8 +21,8 @@ export class ApiService {
   }
 
   // POST request
-  putRequest(url: string, body: any, options: any): Observable<any> {
-    return this.http.post(url, body, options);
+  postRequest(url: string, body: any, options: any): Observable<any> {
+    return this.http.post<any>(url, body, options);
   }
 
   // PUT request

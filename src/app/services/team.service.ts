@@ -20,6 +20,6 @@ export class TeamService {
     addTeam(newTeam: ffbteam): Observable<any> {
       let requestUrl = `${BASE_API_URL}/api/ffbteam`;
       let headers = new HttpHeaders().set('Content-Type', 'application/json');
-      return this.apiService.putRequest(requestUrl, newTeam, headers);
+      return this.apiService.postRequest(requestUrl, newTeam, headers);
     }
 }
