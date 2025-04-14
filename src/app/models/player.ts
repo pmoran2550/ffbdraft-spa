@@ -5,6 +5,8 @@ export interface player {
     rank: number;
     nflTeam: string;
     ffbTeam: string;
+    ffbTeamName: string;
+    ffbTeamManager: string,
     byeWeek: number;
     ffbYear: number;
 }
