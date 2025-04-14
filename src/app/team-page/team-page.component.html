@@ -2,9 +2,14 @@
 
 <div class="button-group">
     <button mat-raised-button color="primary" (click)="openTeamForm()">Add Team</button>
+    <mat-checkbox color="primary" class="edit-checkbox"
+        [(ngModel)] = "isEditing" 
+        color="primary">Edit Teams
+    </mat-checkbox>
 </div>
 
 <div class="teams" *ngIf="teamData$ | async as teams">
-    <app-team-card *ngFor="let item of teams" [team]="item">
+    <app-team-card *ngFor="let item of teams" [team]="item" 
+        [isEditing]="isEditing" (removeEvent)="removeTeam(item.id)">
     </app-team-card>
 </div>

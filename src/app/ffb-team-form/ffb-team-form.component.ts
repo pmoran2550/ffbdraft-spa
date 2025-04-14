@@ -47,8 +47,8 @@ export class FfbTeamFormComponent implements OnInit, OnDestroy {
       let newTeam: ffbteam = this.newTeamForm.value;
       newTeam.id = '00000000-0000-0000-0000-000000000000';
       this.addTeamSubscription = this.teamService.addTeam(newTeam).subscribe({
-        next: (resp) => { console.log("addTeam response: ", resp);
-        this.dialogRef.close(this.newTeamForm.value);
+        next: (resp) => { 
+          this.dialogRef.close(this.newTeamForm.value);
         },
         error: (error) => {
           this.postErrorMsg = 'Error adding team: ' + error.statusText;
@@ -56,7 +56,6 @@ export class FfbTeamFormComponent implements OnInit, OnDestroy {
           console.error('Error in post request: ', error);
         }
       });
-      console.log('Form Data:', this.newTeamForm.value); // Form values on submission
     } else {
       console.log('Form is invalid.');
     }

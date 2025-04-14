@@ -1,12 +1,17 @@
 <div *ngIf="team">
     <mat-card class="team-card">
-        <mat-card-header>
+        <mat-card-header class="header">
             <mat-card-title>{{ team.name}}</mat-card-title>
-            <mat-card-title>{{ team.manager}}</mat-card-title>
+            <mat-card-title>Manager: {{ team.manager}}</mat-card-title>
         </mat-card-header>
         <mat-card-content class="content-parent">
-            <div class="content-item">{{ team.nickname}}</div>  
-            <div class="content-item">{{ team.email}}</div>
+            <div class="content-item">Nickname: {{ team.nickname}}</div>  
+            <div class="content-item">Email: {{ team.email}}</div>
+            <div class="content-item" *ngIf="isEditing">
+                <button mat-icon-button (click)="deleteTeam(team.id)" >
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
         </mat-card-content>
     </mat-card>
 </div>

@@ -3,12 +3,23 @@
     background-color:lightblue;
   }
 
+  .header {
+    margin-bottom: 10px;
+  }
+
 .content-parent {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-evenly;
+    justify-content:space-between
   }
 
 .content-item {
-    flex-basis: auto;
+    flex-basis: 50px;
   }
+
+  /* mat-card-content mat-icon {
+    font-size: 24px;  
+    vertical-align: top;
+    margin-right: 8px; 
+  } */
+  

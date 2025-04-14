@@ -22,4 +22,9 @@ export class TeamService {
       let headers = new HttpHeaders().set('Content-Type', 'application/json');
       return this.apiService.postRequest(requestUrl, newTeam, headers);
     }
+
+    removeTeam(teamId: string): Observable<any> {
+      let requestUrl = `${BASE_API_URL}/api/ffbteam/${teamId}`;
+      return this.apiService.deleteItem(requestUrl, undefined);
+    }
 }

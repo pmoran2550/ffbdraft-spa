@@ -31,8 +31,8 @@ export class ApiService {
   // }
 
   // DELETE request
-  // deleteItem(id: number): Observable<any> {
-  //   return this.http.delete(`${BASE_API_URL}/items/${id}`);
-  // }
+  deleteItem(url: string, options: any): Observable<any> {
+    return this.http.delete(url, options);
+  }
 }
 
