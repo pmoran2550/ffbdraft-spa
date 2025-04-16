@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormsModule } from '@angular/forms';
+import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
   selector: 'app-team-page',
@@ -23,8 +24,9 @@ export class TeamPageComponent implements OnDestroy {
   teamData$: Observable<ffbteam[]> | undefined;
   destroy$ = new Subject<void>();
   isEditing: boolean = false;
+  isAdmin$ = this.authService.isAdmin$;
   
-  constructor(private teamservice: TeamService, public dialog: MatDialog) { }
+  constructor(private teamservice: TeamService, public dialog: MatDialog, public authService: AuthenticationService) { }
   
   ngOnInit(): void {
     this.getTeamData();
