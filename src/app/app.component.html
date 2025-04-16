@@ -8,11 +8,13 @@
         <mat-icon>home</mat-icon>
         Home
         </button>
-      <ng-container *ngIf="isAuthenticated$ | async">
+      <ng-container *ngIf="isAdmin$ | async">
         <button mat-button [routerLink]="['/teams']">Teams</button>
       </ng-container>
       <button mat-button [routerLink]="['/app-about']">About</button>  
     </div>
+
+
     <div *ngIf="isAuthenticated$ | async; else unAuthenticated">
       <app-logout-button></app-logout-button>
     </div>

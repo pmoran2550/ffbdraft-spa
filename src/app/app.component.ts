@@ -14,9 +14,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { LoginButtonComponent } from "./shared/components/buttons/login-button/login-button.component";
-import { AuthService} from '@auth0/auth0-angular';
 import { LogoutButtonComponent } from './shared/components/buttons/logout-button/logout-button.component';
 import { map, Observable } from 'rxjs';
+import { AuthenticationService } from './services/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -45,16 +45,12 @@ import { map, Observable } from 'rxjs';
 })
 export class AppComponent implements OnInit {
   ngOnInit(): void {
-    //this.isAuthenticated$.subscribe(value => console.log('isAuthenticated$: ', value));
   }
 
-  private auth = inject(AuthService);
+  private authService = inject(AuthenticationService);
 
   title = 'ffbdraft-spa';
-  isAuthenticated$: Observable<boolean> = this.auth.isAuthenticated$;
-  user$ = this.auth.user$;
-  // profile$ = this.user$.pipe(
-  //   map((user: any) => JSON.stringify(user, null, 2))
-  // );
-  
+  isAuthenticated$ = this.authService.isAuthenticated$;
+  user$ = this.authService.user$;
+  isAdmin$ = this.authService.isAdmin$;
 }

@@ -7,3 +7,4 @@ export const AUTH0_CLIENT_ID="PoJt9Tj9kShVTwtjM9GjzkGg1HNDWmuh";
 export const AUTH0_CALLBACK_URL="http://localhost:4200/callback";
 export const AUTH0_AUDIENCE="https://ffbdraft/api";
 export const AUTH0_ALLOWED_URI='https://localhost:7210/api/*';
+export const AUTH0_FFBCLAIM='https://ffbview.com/roles';
