@@ -1,6 +1,7 @@
 <h1 class="header-class">Fantasy Football Draft List: 2024</h1>
 
 <div class="filters">
+    <mat-label class="filter-label">Positions: </mat-label>
     <mat-checkbox class="position-checkbox" #AllCheckbox 
         [(ngModel)] = "showAll" 
         (change)="positionFilterChanged($event, 'All')" 
@@ -38,8 +39,9 @@
     </mat-checkbox>
 </div>
 
-<form [formGroup]="teamPickForm">
-    <div class="radio-group">
+<form [formGroup]="teamPickForm" class="radio-group">
+    <mat-label class="filter-label">Teams: </mat-label>
+    <div >
         <mat-radio-group color="primary" formControlName="allTeams">
             <mat-radio-button class="radio-button" [value]="true"
             (change)="handleStandaloneChange($event)">All</mat-radio-button>

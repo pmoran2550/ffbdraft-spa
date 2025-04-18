@@ -13,13 +13,15 @@ import { MatRadioModule } from '@angular/material/radio';
 import { ffbteam } from '../models/ffbteam';
 import { TeamService } from '../services/team.service';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { MatLabel } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [NgFor, NgIf, PlayerCardComponent, 
     MatCheckbox, FormsModule, FontAwesomeModule, 
-    MatRadioModule, AsyncPipe, ReactiveFormsModule, ScrollingModule],
+    MatRadioModule, AsyncPipe, ReactiveFormsModule, 
+    ScrollingModule, MatLabel],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
