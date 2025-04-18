@@ -1,19 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap, throwError } from 'rxjs';
-import { BASE_API_URL } from '../constants';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
   constructor(private http: HttpClient) { }
-
-  // Methods for API calls will go here
-  // GET request
-  // getData(): Observable<any> {
-  //   return this.http.get(`${BASE_API_URL}/data`);
-  // }
 
   // GET request 
   getRequest(url: string, options: any): Observable<any> {

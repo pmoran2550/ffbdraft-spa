@@ -3,7 +3,7 @@
 }
 
 .players {
-    width: 30%;
+    width: 40%;
     margin: 0 auto;
 }
 
@@ -31,12 +31,29 @@
     color: #dc3545;
     padding: 1rem;
     font-size: 1.8rem;
-  }
+}
   
-  .error-icon {
+.error-icon {
     display: flex;
     justify-content: center;
     color: #dc3545;
     font-size: 5rem;
+}
+  
+.radio-group {
+    display: flex;
+    justify-content: center;
+}
+
+.radio-button {
+    margin-left: 10px;
+}
+
+.scroll-container {
+    height: 600px;
+    width: 100%;
   }
   
+  .list-item {
+    padding: 10px;
+  }

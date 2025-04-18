@@ -1,19 +1,25 @@
 import { Component, OnDestroy, OnInit,  } from '@angular/core';
 import { finalize, map, Observable, Subscription, tap } from 'rxjs';
-import { NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { player } from '../models/player';
 import { PlayerCardComponent } from "../player-card/player-card.component";
 import { PlayerService } from '../services/player.service';
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { MatRadioModule } from '@angular/material/radio';
+import { ffbteam } from '../models/ffbteam';
+import { TeamService } from '../services/team.service';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, PlayerCardComponent, MatCheckbox, FormsModule, FontAwesomeModule],
+  imports: [NgFor, NgIf, PlayerCardComponent, 
+    MatCheckbox, FormsModule, FontAwesomeModule, 
+    MatRadioModule, AsyncPipe, ReactiveFormsModule, ScrollingModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -33,14 +39,25 @@ export class HomeComponent implements OnInit, OnDestroy {
   private playerDataSubscription?: Subscription;
   errorMsg: string = "";
   faExclamationTriangle = faExclamationTriangle;
+  teamData$: Observable<ffbteam[]> | undefined;
+  teamPickForm: FormGroup;
+  selectedTeamStr: string = 'All';
+  selectedTeam: ffbteam | undefined;
+  
 
-  constructor(private playerService: PlayerService) {}
+  constructor(private playerService: PlayerService, private teamservice: TeamService, private fb: FormBuilder) 
+  {
+    this.teamPickForm = this.fb.group({
+      allTeams: [true],
+      teams: ['']
+    });
+  }
 
   ngOnInit(): void {
     console.log("on init");
     this.getPlayerData(2024);
+    this.getTeamData();
 
-    
   }
   
   getPlayerData(year: number) {
@@ -59,10 +76,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     const subscription = this.playerData$.subscribe({
       next: processedPlayers => {
         console.log('Player data loaded');
-        // Add your data handling logic here
         this.playerData = processedPlayers;
         this.filteredPlayerData = processedPlayers;
-  
       },
       error: err => {
         console.error('Error loading player data:', err);
@@ -91,13 +106,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.playerData.length > 0) {
       this.filteredPlayerData = [];
       this.playerData.forEach(player => {
-        if (this.showAll || 
+        if ((this.showAll || 
           (player.position == 'QB' && this.showQB) || 
           (player.position == 'RB' && this.showRB) ||
           (player.position == 'WR' && this.showWR) ||
           (player.position == 'TE' && this.showTE) ||
           (player.position == 'K' && this.showK) ||
-          (player.position == 'DEF' && this.showDEF) 
+          (player.position == 'DEF' && this.showDEF)) && 
+          (this.selectedTeamStr == 'All' || 
+          (this.selectedTeamStr == player.ffbTeamManager))
         ) {
           this.filteredPlayerData.push(player);
         }
@@ -142,6 +159,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.filter();
   }
     
+  getTeamData() {
+    this.teamData$ = this.teamservice.getTeams();
+  }
+
+  handleStandaloneChange(event: any) {
+    if (event.source.checked) {
+      this.teamPickForm?.get('teams')?.setValue(null);
+      this.selectedTeamStr = 'All';
+      this.selectedTeam = undefined;
+      this.filter();
+    }
+  }
+
+  handleTeamGroupChange(event: any) {
+    if (event.source.checked) {
+      this.teamPickForm?.get('allTeams')?.setValue(null);
+      this.selectedTeamStr = event.value;
+      this.filter();
+    }
+  }
+
   ngOnDestroy() {
     this.playerDataSubscription?.unsubscribe();
   }

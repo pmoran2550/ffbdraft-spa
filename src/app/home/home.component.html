@@ -38,16 +38,32 @@
     </mat-checkbox>
 </div>
 
+<form [formGroup]="teamPickForm">
+    <div class="radio-group">
+        <mat-radio-group color="primary" formControlName="allTeams">
+            <mat-radio-button class="radio-button" [value]="true"
+            (change)="handleStandaloneChange($event)">All</mat-radio-button>
+        </mat-radio-group>
+        <mat-radio-group color="primary" formControlName="teams">
+            <mat-radio-button class="radio-button" *ngFor="let team of teamData$ | async"  
+            color="primary" [value]="team.manager" (change)="handleTeamGroupChange($event)">
+                {{team.manager}}
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+</form>
+
 <div class="loading-message" *ngIf="isLoading; else content">
     Loading...
 </div>
 
 <ng-template #content>    
     <div class="players" *ngIf="filteredPlayerData.length > 0; else noData">
-        <app-player-card *ngFor="let item of filteredPlayerData"
-        [player]="item">
-
-        </app-player-card>
+        <cdk-virtual-scroll-viewport itemSize="50" class="scroll-container">
+            <app-player-card *cdkVirtualFor="let item of filteredPlayerData" class="list-item"
+            [player]="item">
+            </app-player-card>
+            </cdk-virtual-scroll-viewport>
     </div>
     <ng-template  #noData>
         <div >
