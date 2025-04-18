@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   
   getPlayerData(year: number) {
-    this.playerData$ = this.playerService.getItemById(year).pipe(
+    this.playerData$ = this.playerService.getPlayersByYear(year).pipe(
       map(players => players.map((player: any) => ({
         ...player,
         ffbTeam: this.getFFBTeamName(player.ffbTeam)

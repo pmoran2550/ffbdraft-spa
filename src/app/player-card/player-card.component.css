@@ -6,9 +6,22 @@
   .content-parent {
     display: flex;
     flex-flow: row wrap;
-    justify-content: space-evenly;
+    justify-content: space-between;
+  }
+
+  .content-parent-FFBTeam {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 5px;
   }
 
   .content-item {
     flex-basis: auto;
+  }
+
+  .content-item-FFBTeam {
+    display: flex;
+    justify-content: center;
   }

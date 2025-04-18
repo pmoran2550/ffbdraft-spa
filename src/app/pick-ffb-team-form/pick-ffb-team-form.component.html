@@ -1,0 +1,15 @@
+<form [formGroup]="teamPickForm" (ngSubmit)="submit()">
+    <div>
+        <mat-radio-group class="radio-group" formControlName="teams">
+            <mat-radio-button *ngFor="let team of teamData$ | async" [value]="team" color="primary">
+                {{team.manager}}
+            </mat-radio-button>
+        </mat-radio-group>
+    </div>
+  
+    <button mat-button class="submit-button" type="submit">submit</button>
+    <div mat-dialog-actions class="input-button">
+        <button mat-button (click)="closeModal()">Cancel</button>
+    </div>
+      
+  </form>

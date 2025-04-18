@@ -17,6 +17,7 @@ import { LoginButtonComponent } from "./shared/components/buttons/login-button/l
 import { LogoutButtonComponent } from './shared/components/buttons/logout-button/logout-button.component';
 import { map, Observable } from 'rxjs';
 import { AuthenticationService } from './services/authentication.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +39,8 @@ import { AuthenticationService } from './services/authentication.service';
     FontAwesomeModule, 
     LoginButtonComponent,
     LogoutButtonComponent,
-    MatDialogModule
+    MatDialogModule,
+    ReactiveFormsModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'

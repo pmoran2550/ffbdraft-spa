@@ -8,5 +8,5 @@ export interface player {
     ffbTeamName: string;
     ffbTeamManager: string,
     byeWeek: number;
-    ffbYear: number;
+    year: number;
 }

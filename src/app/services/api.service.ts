@@ -25,10 +25,10 @@ export class ApiService {
     return this.http.post<any>(url, body, options);
   }
 
-  // PUT request
-  // updateItem(id: number, item: any): Observable<any> {
-  //   return this.http.put(`${BASE_API_URL}/items/${id}`, item);
-  // }
+  //PUT request
+  putRequest(url: string, body: any, options: any): Observable<any> {
+    return this.http.put(url, body, options);
+  }
 
   // DELETE request
   deleteItem(url: string, options: any): Observable<any> {
