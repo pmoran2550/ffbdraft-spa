@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit,  } from '@angular/core';
-import { finalize, map, Observable, Subscription, tap } from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild,  } from '@angular/core';
+import { debounceTime, finalize, map, Observable, Subscription, tap } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { player } from '../models/player';
 import { PlayerCardComponent } from "../player-card/player-card.component";
@@ -12,8 +12,11 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { MatRadioModule } from '@angular/material/radio';
 import { ffbteam } from '../models/ffbteam';
 import { TeamService } from '../services/team.service';
-import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { MatLabel } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { DRAFT_YEAR } from '../constants';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +24,7 @@ import { MatLabel } from '@angular/material/form-field';
   imports: [NgFor, NgIf, PlayerCardComponent, 
     MatCheckbox, FormsModule, FontAwesomeModule, 
     MatRadioModule, AsyncPipe, ReactiveFormsModule, 
-    ScrollingModule, MatLabel],
+    ScrollingModule, MatLabel, MatIconModule, MatButtonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -45,21 +48,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   teamPickForm: FormGroup;
   selectedTeamStr: string = 'All';
   selectedTeam: ffbteam | undefined;
-  
+  searchForm: FormGroup;
+  searchName: string = '';
 
+  @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
+  
   constructor(private playerService: PlayerService, private teamservice: TeamService, private fb: FormBuilder) 
   {
     this.teamPickForm = this.fb.group({
       allTeams: [true],
       teams: ['']
     });
+
+    this.searchForm = this.fb.group({
+      searchTerm: ''
+    });
   }
 
   ngOnInit(): void {
     console.log("on init");
-    this.getPlayerData(2024);
+    this.getPlayerData(DRAFT_YEAR);
     this.getTeamData();
-
+    this.searchForm.get('searchTerm')?.valueChanges.pipe(debounceTime(500)).subscribe(value => {
+      this.searchName = value;
+      console.log("find ", this.searchName);
+      this.filter();
+    });
   }
   
   getPlayerData(year: number) {
@@ -116,7 +130,9 @@ export class HomeComponent implements OnInit, OnDestroy {
           (player.position == 'K' && this.showK) ||
           (player.position == 'DEF' && this.showDEF)) && 
           (this.selectedTeamStr == 'All' || 
-          (this.selectedTeamStr == player.ffbTeamManager))
+          (this.selectedTeamStr == player.ffbTeamManager)) && 
+          (this.searchName == '' || 
+          (player.name.toLowerCase().includes(this.searchName.toLowerCase())))
         ) {
           this.filteredPlayerData.push(player);
         }
@@ -179,6 +195,33 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.teamPickForm?.get('allTeams')?.setValue(null);
       this.selectedTeamStr = event.value;
       this.filter();
+    }
+  }
+
+  refreshDisplay(): void {
+    this.getPlayerData(DRAFT_YEAR);
+  }
+
+  onSearch(): void {
+    const searchTerm = this.searchForm.value.searchTerm;
+    if (searchTerm) {
+      const foundIndex = this.filteredPlayerData.findIndex(item => 
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      if (foundIndex > -1) {
+        this.scrollToIndex(foundIndex);
+      }
+    }
+  }
+
+  scrollToIndex(index: number) {
+    this.viewport.scrollToIndex(index, 'smooth');
+  }
+
+  onFindChange() {
+    if (this.searchForm.value.searchTerm) {
+      console.log('term: ', this.searchForm.value.searchTerm);
+      this.searchName = this.searchForm.value.searchTerm;
     }
   }
 

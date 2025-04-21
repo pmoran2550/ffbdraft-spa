@@ -8,3 +8,4 @@ export const AUTH0_CALLBACK_URL="http://localhost:4200/callback";
 export const AUTH0_AUDIENCE="https://ffbdraft/api";
 export const AUTH0_ALLOWED_URI='https://localhost:7210/api/*';
 export const AUTH0_FFBCLAIM='https://ffbview.com/roles';
+export const DRAFT_YEAR=2024;

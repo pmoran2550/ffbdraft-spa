@@ -2,6 +2,22 @@
     text-align: center;
 }
 
+.control-container {
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.refresh-button {
+    margin-left: 20px;
+}
+
+.find-box {
+    margin-left: 20px;
+    margin-right: 5px;
+}
+
 .players {
     width: 40%;
     margin: 0 auto;
@@ -11,7 +27,7 @@
     display: flex;
     width: 40%;
     margin: 0 auto;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .filter-label {
@@ -48,6 +64,30 @@
     font-size: 5rem;
 }
   
+.info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+    margin-top: 20px;
+}
+
+.info-message {
+    display: flex;
+    justify-content: center;
+    color: black;
+    padding: 1rem;
+    font-size: 1.8rem;
+}
+  
+.info-icon {
+    color: black;
+    font-size: 5rem;
+    width: 5rem;
+    height: 5rem;
+}
+  
 .radio-group {
     display: flex;
     justify-content: center;
@@ -64,6 +104,7 @@
   
   .list-item {
     padding: 10px;
+    height: 200px;
   }
 
   
