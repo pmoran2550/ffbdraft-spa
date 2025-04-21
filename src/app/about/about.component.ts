@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { APP_VERSION } from '../constants';
 
 @Component({
   selector: 'app-about',
@@ -11,5 +12,6 @@ import { MatIconModule } from '@angular/material/icon';
 export class AboutComponent {
 
   currentYear: number = new Date().getFullYear();
+  versionNumber: string = APP_VERSION;
   
 }

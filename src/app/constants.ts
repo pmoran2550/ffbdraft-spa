@@ -9,3 +9,4 @@ export const AUTH0_AUDIENCE="https://ffbdraft/api";
 export const AUTH0_ALLOWED_URI='https://localhost:7210/api/*';
 export const AUTH0_FFBCLAIM='https://ffbview.com/roles';
 export const DRAFT_YEAR=2024;
+export const APP_VERSION="1.0.0";
