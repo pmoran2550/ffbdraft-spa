@@ -33,8 +33,10 @@
 
   <mat-menu #menu="matMenu">
     <button mat-menu-item [routerLink]="['/app-home']">Home</button>
-    <button mat-menu-item [routerLink]="['/teams']">Teams</button>
-    <button mat-menu-item [routerLink]="['/app-about']">About</button>
+    <ng-container *ngIf="isAdmin$ | async">
+      <button mat-button [routerLink]="['/teams']">Teams</button>
+    </ng-container>
+  <button mat-menu-item [routerLink]="['/app-about']">About</button>
   </mat-menu>
 </mat-toolbar>
 <router-outlet></router-outlet>
