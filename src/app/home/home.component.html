@@ -4,59 +4,59 @@
     <button class="refresh-button" mat-raised-button color="primary" (click)="refreshDisplay()">Refresh</button>
     <mat-label class="find-box" >Find a player: </mat-label>
     <form [formGroup]="searchForm" >
-        <input formControlName="searchTerm" placeholder="Search..." >
+        <input class="find-input" formControlName="searchTerm" placeholder="Find..." >
     </form>    
 </div>
   
 
 <div class="filters">
     <mat-label class="filter-label">Positions: </mat-label>
-    <mat-checkbox class="position-checkbox" #AllCheckbox 
+    <mat-checkbox class="filter-position-checkbox" #AllCheckbox 
         [(ngModel)] = "showAll" 
         (change)="positionFilterChanged($event, 'All')" 
         color="primary">All
     </mat-checkbox>
-    <mat-checkbox class="position-checkbox" #QBCheckbox 
+    <mat-checkbox class="filter-position-checkbox" #QBCheckbox 
         [(ngModel)] = "showQB" 
         (change)="positionFilterChanged($event, 'QB')" 
         color="primary">QB
     </mat-checkbox>
-    <mat-checkbox class="position-checkbox" #RBCheckbox 
+    <mat-checkbox class="filter-position-checkbox" #RBCheckbox 
         [(ngModel)] = "showRB" 
         (change)="positionFilterChanged($event, 'RB')" 
         color="primary">RB
     </mat-checkbox>
-    <mat-checkbox class="position-checkbox" #WRCheckbox 
+    <mat-checkbox class="filter-position-checkbox" #WRCheckbox 
         [(ngModel)] = "showWR" 
         (change)="positionFilterChanged($event, 'WR')" 
         color="primary">WR
     </mat-checkbox>
-    <mat-checkbox class="position-checkbox" #TECheckbox 
+    <mat-checkbox class="filter-position-checkbox" #TECheckbox 
         [(ngModel)] = "showTE" 
         (change)="positionFilterChanged($event, 'TE')" 
         color="primary">TE
     </mat-checkbox>
-    <mat-checkbox class="position-checkbox" #KCheckbox 
+    <mat-checkbox class="filter-position-checkbox" #KCheckbox 
         [(ngModel)] = "showK" 
         (change)="positionFilterChanged($event, 'K')" 
         color="primary">K
     </mat-checkbox>
-    <mat-checkbox class="position-checkbox" #DEFCheckbox 
+    <mat-checkbox class="filter-position-checkbox" #DEFCheckbox 
         [(ngModel)] = "showDEF" 
         (change)="positionFilterChanged($event, 'DEF')" 
         color="primary">DEF
     </mat-checkbox>
 </div>
 
-<form [formGroup]="teamPickForm" class="radio-group">
+<form [formGroup]="teamPickForm" class="teams-radio-group">
     <mat-label class="filter-label">Teams: </mat-label>
     <div >
         <mat-radio-group color="primary" formControlName="allTeams">
-            <mat-radio-button class="radio-button" [value]="true"
+            <mat-radio-button class="teams-radio-button" [value]="true"
             (change)="handleStandaloneChange($event)">All</mat-radio-button>
         </mat-radio-group>
         <mat-radio-group color="primary" formControlName="teams">
-            <mat-radio-button class="radio-button" *ngFor="let team of teamData$ | async"  
+            <mat-radio-button class="teams-radio-button" *ngFor="let team of teamData$ | async"  
             color="primary" [value]="team.manager" (change)="handleTeamGroupChange($event)">
                 {{team.manager}}
             </mat-radio-button>

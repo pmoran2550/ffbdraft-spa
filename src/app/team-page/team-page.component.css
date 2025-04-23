@@ -2,11 +2,6 @@
     text-align: center;
 }
 
-.teams {
-    width: 30%;
-    margin: 0 auto;
-}
-
 .button-group {
     display: flex;
     justify-content: center;
@@ -15,4 +10,20 @@
 
 .edit-checkbox {
     margin-left: 20px;
+}
+
+@media (min-width: 601px) {
+    .teams {
+        width: 30%;
+        margin: 0 auto;
+    }
+    
+}
+
+@media (max-width: 600px) {
+    .teams {
+        width: 300px;
+        margin: 0 auto;
+    }
+    
 }

@@ -1,5 +1,8 @@
 <mat-toolbar color="primary">
   <mat-toolbar color="primary">
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu" class="hide-on-desktop">
+      <mat-icon>menu</mat-icon>
+    </button>
     <span>FFB Draft</span>
     <span class="spacer"></span>
 
@@ -29,9 +32,9 @@
   </mat-toolbar>
 
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>Home</button>
-    <button mat-menu-item>About</button>
-    <button mat-menu-item>Contact</button>
+    <button mat-menu-item [routerLink]="['/app-home']">Home</button>
+    <button mat-menu-item [routerLink]="['/teams']">Teams</button>
+    <button mat-menu-item [routerLink]="['/app-about']">About</button>
   </mat-menu>
 </mat-toolbar>
 <router-outlet></router-outlet>
