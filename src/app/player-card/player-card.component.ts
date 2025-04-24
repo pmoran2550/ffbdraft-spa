@@ -36,6 +36,7 @@ export class PlayerCardComponent {
   isEditing: boolean = false;
   isAdmin$ = this.authService.isAdmin$;
   destroy$ = new Subject<void>();
+  showAll: boolean = false;
 
   editFFBTeam(player: any): void {
     console.log("edit team for ", player);
@@ -43,21 +44,22 @@ export class PlayerCardComponent {
     this.openTeamForm();
   }
 
-    openTeamForm(): void {
-      this.dialogPickTeam.open(PickFfbTeamFormComponent, {
-        height: 'auto',
-        width: '400px'
-      })
-      .afterClosed().pipe(takeUntil(this.destroy$))
-      .subscribe(result => {
-        if (result) {
-          console.log('Returned object: ', result['teams']);
-          this.isEditing = false;
-          let newTeam: ffbteam = result['teams'];
-          this.updateFFBTeam(newTeam);
-        }
-      });
-    }
+  openTeamForm(): void {
+    this.dialogPickTeam.open(PickFfbTeamFormComponent, {
+      data: this.showAll,
+      height: 'auto',
+      width: '400px'
+    })
+    .afterClosed().pipe(takeUntil(this.destroy$))
+    .subscribe(result => {
+      if (result) {
+        console.log('Returned object: ', result['teams']);
+        this.isEditing = false;
+        let newTeam: ffbteam = result['teams'];
+        this.updateFFBTeam(newTeam);
+      }
+    });
+  }
   
   cancelFFBTeamEdit(): void {
     this.isEditing = false;

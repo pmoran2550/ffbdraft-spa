@@ -35,6 +35,19 @@
         margin: 0 auto;
     }
     
+    .team-filter {
+        display: flex;
+        width: 40%;
+        margin: 0 auto;
+        margin-bottom: 5px;
+    }
+    
+    .team-filter-label {
+        display: flex;
+        align-items: center;
+        font-weight: bold;
+        font-size:x-large;
+    }
 }
 
 @media (max-width: 600px) {
@@ -62,6 +75,15 @@
     .players {
         width: 300px;
         margin: 0 auto;
+    }
+    
+    .team-filter {
+        text-align: center;
+    }
+    
+    .team-filter-label {
+        font-weight: bold;
+        font-size:x-large;
     }
     
 }
@@ -142,5 +164,4 @@
     padding: 10px;
     height: 200px;
   }
-
   

@@ -1,6 +1,7 @@
-<form [formGroup]="teamPickForm" (ngSubmit)="submit()">
+<form class="form-dialog" [formGroup]="teamPickForm" (ngSubmit)="submit()">
     <div>
         <mat-radio-group class="radio-group" formControlName="teams">
+            <mat-radio-button *ngIf="showAll" [value]="allTeam" color="primary">All</mat-radio-button>
             <mat-radio-button *ngFor="let team of teamData$ | async" [value]="team" color="primary">
                 {{team.manager}}
             </mat-radio-button>

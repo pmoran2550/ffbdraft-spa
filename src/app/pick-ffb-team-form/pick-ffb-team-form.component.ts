@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, inject, Input } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TeamService } from '../services/team.service';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { MatRadioModule} from '@angular/material/radio'
@@ -11,7 +11,7 @@ import { MatButton } from '@angular/material/button';
 @Component({
   selector: 'app-pick-ffb-team-form',
   standalone: true,
-  imports: [ReactiveFormsModule, NgFor, MatRadioModule, AsyncPipe, MatButton],
+  imports: [ReactiveFormsModule, NgFor, MatRadioModule, AsyncPipe, MatButton, NgIf],
   templateUrl: './pick-ffb-team-form.component.html',
   styleUrl: './pick-ffb-team-form.component.css'
 })
@@ -20,15 +20,27 @@ export class PickFfbTeamFormComponent {
   teamPickForm: FormGroup;
   teamList: any = [];
   teamData$: Observable<ffbteam[]> | undefined;
+  showAll: boolean = false;
+  allTeam: ffbteam = {
+    id: '0',
+    name: 'All',
+    manager: 'All',
+    email: ' ',
+    thirdpartyid: ' ',
+    nickname: ' '
+  }
 
   constructor(private fb: FormBuilder, 
     public dialogRef: MatDialogRef<PickFfbTeamFormComponent>, 
-    private teamservice: TeamService) {
+    private teamservice: TeamService, 
+    @Inject(MAT_DIALOG_DATA) public data: any) {
       this.teamPickForm = this.fb.group({
         teams: ['']
       });
 
       this.getTeamData();
+      console.log('data is ', data);
+      this.showAll = data;
   }
 
   getTeamData() {
@@ -36,12 +48,15 @@ export class PickFfbTeamFormComponent {
   }
 
   submit() {
-    console.log(this.teamPickForm.value);
-    this.dialogRef.close(this.teamPickForm.value);
+    let teamVal: string = this.teamPickForm.value;
+    if (this.teamPickForm.valid == undefined)
+      teamVal = 'All';
+    console.log(teamVal);
+    this.dialogRef.close(teamVal);
   }
     
   closeModal(): void {
-    this.dialogRef.close(undefined);
+    this.dialogRef.close();
   }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild,  } from '@angular/core';
-import { debounceTime, finalize, map, Observable, Subscription, tap } from 'rxjs';
+import { debounceTime, finalize, map, Observable, Subject, Subscription, takeUntil, tap } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { player } from '../models/player';
 import { PlayerCardComponent } from "../player-card/player-card.component";
@@ -17,6 +17,9 @@ import { MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DRAFT_YEAR } from '../constants';
+import { AuthService } from '@auth0/auth0-angular';
+import { MatDialog } from '@angular/material/dialog';
+import { PickFfbTeamFormComponent } from '../pick-ffb-team-form/pick-ffb-team-form.component';
 
 @Component({
   selector: 'app-home',
@@ -47,13 +50,22 @@ export class HomeComponent implements OnInit, OnDestroy {
   teamData$: Observable<ffbteam[]> | undefined;
   teamPickForm: FormGroup;
   selectedTeamStr: string = 'All';
-  selectedTeam: ffbteam | undefined;
   searchForm: FormGroup;
   searchName: string = '';
+  private findDataSubscription?: Subscription;
+  isAuthenticated$ = this.authService.isAuthenticated$;
+  isAuthenticated: boolean = false;
+  private isAuthenticatedSubscription?: Subscription;
+  destroy$ = new Subject<void>();
 
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
   
-  constructor(private playerService: PlayerService, private teamservice: TeamService, private fb: FormBuilder) 
+  constructor(private playerService: PlayerService, 
+    private teamservice: TeamService, 
+    private fb: FormBuilder, 
+    private authService: AuthService, 
+    public dialogPickTeam:MatDialog
+    ) 
   {
     this.teamPickForm = this.fb.group({
       allTeams: [true],
@@ -69,10 +81,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("on init");
     this.getPlayerData(DRAFT_YEAR);
     this.getTeamData();
-    this.searchForm.get('searchTerm')?.valueChanges.pipe(debounceTime(500)).subscribe(value => {
+    this.findDataSubscription = this.searchForm.get('searchTerm')?.valueChanges.pipe(debounceTime(500)).subscribe(value => {
       this.searchName = value;
       console.log("find ", this.searchName);
       this.filter();
+    });
+    this.isAuthenticatedSubscription = this.isAuthenticated$.subscribe(val => {
+      this.isAuthenticated = val;
     });
   }
   
@@ -181,23 +196,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.teamData$ = this.teamservice.getTeams();
   }
 
-  handleStandaloneChange(event: any) {
-    if (event.source.checked) {
-      this.teamPickForm?.get('teams')?.setValue(null);
-      this.selectedTeamStr = 'All';
-      this.selectedTeam = undefined;
-      this.filter();
-    }
-  }
-
-  handleTeamGroupChange(event: any) {
-    if (event.source.checked) {
-      this.teamPickForm?.get('allTeams')?.setValue(null);
-      this.selectedTeamStr = event.value;
-      this.filter();
-    }
-  }
-
   refreshDisplay(): void {
     this.getPlayerData(DRAFT_YEAR);
   }
@@ -225,8 +223,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  changeTeamFilter() {
+    this.showAll = true;
+    this.dialogPickTeam.open(PickFfbTeamFormComponent, {
+      data: this.showAll,
+      height: '90vh',
+      width: '400px',
+    })
+    .afterClosed().pipe(takeUntil(this.destroy$))
+    .subscribe(result => {
+      if (result && result['teams'] != '') {
+        console.log('Returned object: ', result['teams']);
+        let newTeam: ffbteam = result['teams'];
+        this.selectedTeamStr = newTeam.manager;
+        this.filter();
+      }
+    });
+  }
+
   ngOnDestroy() {
     this.playerDataSubscription?.unsubscribe();
+    this.findDataSubscription?.unsubscribe();
   }
 }
 

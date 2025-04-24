@@ -48,21 +48,10 @@
     </mat-checkbox>
 </div>
 
-<form [formGroup]="teamPickForm" class="teams-radio-group">
-    <mat-label class="filter-label">Teams: </mat-label>
-    <div >
-        <mat-radio-group color="primary" formControlName="allTeams">
-            <mat-radio-button class="teams-radio-button" [value]="true"
-            (change)="handleStandaloneChange($event)">All</mat-radio-button>
-        </mat-radio-group>
-        <mat-radio-group color="primary" formControlName="teams">
-            <mat-radio-button class="teams-radio-button" *ngFor="let team of teamData$ | async"  
-            color="primary" [value]="team.manager" (change)="handleTeamGroupChange($event)">
-                {{team.manager}}
-            </mat-radio-button>
-        </mat-radio-group>
-    </div>
-</form>
+<div class="team-filter">
+    <mat-label class="team-filter-label">Showing Team: {{ selectedTeamStr }}</mat-label>
+    <button class="refresh-button" mat-raised-button color="primary" (click)="changeTeamFilter()">Change Team Filter</button>
+</div>
 
 <div class="loading-message" *ngIf="isLoading; else content">
     Loading...
@@ -77,17 +66,23 @@
             </cdk-virtual-scroll-viewport>
     </div>
     <ng-template  #noFilteredData>
-        <div *ngIf="playerData.length > 0; else noData" class="info-container">
+        <div *ngIf="!isAuthenticated; else CheckPlayers" class="info-container">
             <mat-icon class="info-icon">block</mat-icon>
-            <span class="info-message">No players meet this criteria!</span>
+            <span class="info-message">Please Log In!</span>
         </div>
-        <ng-template  #noData>
-            <div >
-                <span class="error-icon"><fa-icon class="error-icon" [icon]="faExclamationTriangle"></fa-icon></span>
-                <span class="error-message">Error!</span>
-                <span class="error-message">{{ errorMsg }}</span>
+        <ng-template #CheckPlayers>
+            <div *ngIf="playerData.length > 0; else noData" class="info-container">
+                <mat-icon class="info-icon">block</mat-icon>
+                <span class="info-message">No players!</span>
             </div>
-        </ng-template>    
+            <ng-template  #noData>
+                <div >
+                    <span class="error-icon"><fa-icon class="error-icon" [icon]="faExclamationTriangle"></fa-icon></span>
+                    <span class="error-message">Error!</span>
+                    <span class="error-message">{{ errorMsg }}</span>
+                </div>
+            </ng-template>   
+        </ng-template>
     </ng-template>
 </ng-template>
   
