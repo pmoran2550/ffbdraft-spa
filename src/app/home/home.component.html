@@ -1,6 +1,6 @@
 <h1 class="header-class">Fantasy Football Draft List: 2024</h1>
 
-<div class="control-container" >
+<div class="control-container" *ngIf="isAuthenticated">
     <button class="refresh-button" mat-raised-button color="primary" (click)="refreshDisplay()">Refresh</button>
     <mat-label class="find-box" >Find a player: </mat-label>
     <form [formGroup]="searchForm" >
@@ -9,7 +9,7 @@
 </div>
   
 
-<div class="filters">
+<div class="filters" *ngIf="isAuthenticated">
     <mat-label class="filter-label">Positions: </mat-label>
     <mat-checkbox class="filter-position-checkbox" #AllCheckbox 
         [(ngModel)] = "showAll" 
@@ -48,7 +48,7 @@
     </mat-checkbox>
 </div>
 
-<div class="team-filter">
+<div class="team-filter" *ngIf="isAuthenticated">
     <mat-label class="team-filter-label">Showing Team: {{ selectedTeamStr }}</mat-label>
     <button class="refresh-button" mat-raised-button color="primary" (click)="changeTeamFilter()">Change Team Filter</button>
 </div>
