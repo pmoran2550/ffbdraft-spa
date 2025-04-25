@@ -24,9 +24,9 @@ import { PickFfbTeamFormComponent } from '../pick-ffb-team-form/pick-ffb-team-fo
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NgFor, NgIf, PlayerCardComponent, 
+  imports: [NgIf, PlayerCardComponent, 
     MatCheckbox, FormsModule, FontAwesomeModule, 
-    MatRadioModule, AsyncPipe, ReactiveFormsModule, 
+    MatRadioModule, ReactiveFormsModule, 
     ScrollingModule, MatLabel, MatIconModule, MatButtonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
