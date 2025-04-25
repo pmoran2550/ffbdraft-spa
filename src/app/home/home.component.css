@@ -38,8 +38,7 @@
     .team-filter {
         display: flex;
         width: 40%;
-        margin: 0 auto;
-        margin-bottom: 5px;
+        margin: 20px auto;
     }
     
     .team-filter-label {
