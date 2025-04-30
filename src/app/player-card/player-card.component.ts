@@ -39,7 +39,6 @@ export class PlayerCardComponent {
   showAll: boolean = false;
 
   editFFBTeam(player: any): void {
-    console.log("edit team for ", player);
     this.isEditing = true;
     this.openTeamForm();
   }
@@ -53,7 +52,6 @@ export class PlayerCardComponent {
     .afterClosed().pipe(takeUntil(this.destroy$))
     .subscribe(result => {
       if (result) {
-        console.log('Returned object: ', result['teams']);
         this.isEditing = false;
         let newTeam: ffbteam = result['teams'];
         this.updateFFBTeam(newTeam);
@@ -80,7 +78,6 @@ export class PlayerCardComponent {
         "ffbTeamManager": team.manager
       }
 
-      console.log("player to update: ", newPlayer);
       this.playerService.putPlayerFFBTeamUpdate(newPlayer).pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (resp) => { 

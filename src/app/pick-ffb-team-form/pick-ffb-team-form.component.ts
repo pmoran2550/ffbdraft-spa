@@ -39,7 +39,6 @@ export class PickFfbTeamFormComponent {
       });
 
       this.getTeamData();
-      console.log('data is ', data);
       this.showAll = data;
   }
 
@@ -51,7 +50,6 @@ export class PickFfbTeamFormComponent {
     let teamVal: string = this.teamPickForm.value;
     if (this.teamPickForm.valid == undefined)
       teamVal = 'All';
-    console.log(teamVal);
     this.dialogRef.close(teamVal);
   }
     

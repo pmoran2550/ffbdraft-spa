@@ -20,6 +20,7 @@ import { DRAFT_YEAR } from '../constants';
 import { AuthService } from '@auth0/auth0-angular';
 import { MatDialog } from '@angular/material/dialog';
 import { PickFfbTeamFormComponent } from '../pick-ffb-team-form/pick-ffb-team-form.component';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-home',
@@ -64,7 +65,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private teamservice: TeamService, 
     private fb: FormBuilder, 
     private authService: AuthService, 
-    public dialogPickTeam:MatDialog
+    public dialogPickTeam:MatDialog,
+    private notificationService:NotificationService
     ) 
   {
     this.teamPickForm = this.fb.group({
@@ -81,14 +83,21 @@ export class HomeComponent implements OnInit, OnDestroy {
     console.log("on init");
     this.getPlayerData(DRAFT_YEAR);
     this.getTeamData();
+
     this.findDataSubscription = this.searchForm.get('searchTerm')?.valueChanges.pipe(debounceTime(500)).subscribe(value => {
       this.searchName = value;
       console.log("find ", this.searchName);
       this.filter();
     });
+
     this.isAuthenticatedSubscription = this.isAuthenticated$.subscribe(val => {
       this.isAuthenticated = val;
     });
+
+    this.notificationService.playersUdated$.subscribe(data => {
+      console.log("notification: ", data);
+      this.getPlayerData(DRAFT_YEAR);
+    })
   }
   
   getPlayerData(year: number) {
@@ -233,7 +242,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     .afterClosed().pipe(takeUntil(this.destroy$))
     .subscribe(result => {
       if (result && result['teams'] != '') {
-        console.log('Returned object: ', result['teams']);
         let newTeam: ffbteam = result['teams'];
         this.selectedTeamStr = newTeam.manager;
         this.filter();
