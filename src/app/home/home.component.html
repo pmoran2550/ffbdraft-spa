@@ -56,7 +56,6 @@
 <div class="loading-message" *ngIf="isLoading; else content">
     Loading...
 </div>
-
 <ng-template #content>    
     <div class="players" *ngIf="filteredPlayerData.length > 0; else noFilteredData">
         <cdk-virtual-scroll-viewport itemSize="200" class="scroll-container">

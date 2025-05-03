@@ -107,7 +107,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         ffbTeam: this.getFFBTeamName(player.ffbTeam)
       }))),
       finalize(() => {
-        this.isLoading = false;
         this.sort();
         this.filter();    
       })
@@ -118,10 +117,12 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.log('Player data loaded');
         this.playerData = processedPlayers;
         this.filteredPlayerData = processedPlayers;
+        this.isLoading = false;
       },
       error: err => {
         console.error('Error loading player data:', err);
         this.filteredPlayerData = [];
+        this.isLoading = false;
         if (err instanceof HttpErrorResponse) {
           this.errorMsg = err.message;
         } else {
