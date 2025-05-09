@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const buildFile = path.join(__dirname, 'app/version.json');
+const buildFile = path.join(__dirname, 'assets/version.json');
 let Major = 1;
 let Minor = 0;
 let Patch = 0;
