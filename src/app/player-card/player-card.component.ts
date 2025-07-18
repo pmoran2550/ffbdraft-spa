@@ -46,7 +46,7 @@ export class PlayerCardComponent {
   openTeamForm(): void {
     this.dialogPickTeam.open(PickFfbTeamFormComponent, {
       data: this.showAll,
-      height: 'auto',
+      height: '90vh',
       width: '400px'
     })
     .afterClosed().pipe(takeUntil(this.destroy$))
