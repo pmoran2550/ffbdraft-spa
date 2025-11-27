@@ -7,6 +7,7 @@ import { authHttpInterceptorFn, AuthModule, provideAuth0 } from '@auth0/auth0-an
 import { AUTH0_AUDIENCE, AUTH0_CLIENT_ID, AUTH0_DOMAIN, AUTH0_ALLOWED_URI } from './constants';
 import { AppRoutingModule, routes } from './app-routing/app-routing.module';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -33,6 +34,6 @@ export const appConfig: ApplicationConfig = {
         ],
       }
     }),
-    provideHttpClient(withInterceptors([authHttpInterceptorFn])),
+    provideHttpClient(withInterceptors([authHttpInterceptorFn])), provideAnimationsAsync(),
   ]
 };

@@ -28,7 +28,7 @@ import { NotificationService } from '../services/notification.service';
   imports: [NgIf, PlayerCardComponent, 
     MatCheckbox, FormsModule, FontAwesomeModule, 
     MatRadioModule, ReactiveFormsModule, 
-    ScrollingModule, MatLabel, MatIconModule, MatButtonModule],
+    ScrollingModule, MatLabel, MatIconModule, MatButtonModule, NgFor],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

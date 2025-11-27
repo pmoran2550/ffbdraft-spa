@@ -1,6 +1,6 @@
 import { Component, inject, Input, OnDestroy } from '@angular/core';
 import { player } from '../models/player';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, NgIf, NgFor, NgForOf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { AuthenticationService } from '../services/authentication.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,12 +12,13 @@ import { CommonModule } from '@angular/common';
 import { PickFfbTeamFormComponent } from '../pick-ffb-team-form/pick-ffb-team-form.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PlayerService } from '../services/player.service';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-player-card',
   standalone: true,
   imports: [NgIf,MatCardModule, AsyncPipe, MatIconModule, 
-    MatButtonModule, MatFormFieldModule],
+    MatButtonModule, MatFormFieldModule, MatExpansionModule, NgFor, NgForOf],
   templateUrl: './player-card.component.html',
   styleUrl: './player-card.component.css'
 })

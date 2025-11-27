@@ -1,14 +1,14 @@
 <div *ngIf="player">
-    <mat-card class="player-card">
-        <mat-card-header>
-            <mat-card-title>{{ player.rank}} {{ player.name}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content >
-            <div class="content-parent">
-                <div class="content-item">Pos: {{ player.position}}</div>
-                <div class="content-item">Team: {{ player.nflTeam}}</div>  
-                <div class="content-item">Bye: {{ player.byeWeek}}</div>
-            </div>
+    <mat-accordion >
+      <mat-expansion-panel class="player-card">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ player.rank}} {{ player.name}}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ player.position}} - {{ player.nflTeam }} (Bye: {{ player.byeWeek }})
+          </mat-panel-description>
+        </mat-expansion-panel-header>
             <div class="content-parent-FFBTeam">
                 <div class="content-item" *ngIf="(isAdmin$ | async) && !isEditing">
                     <button mat-icon-button (click)="editFFBTeam(player)" >
@@ -17,6 +17,6 @@
                 </div>
                 <div class="content-item-FFBTeam" *ngIf="!isEditing">FFB Manager: {{ player.ffbTeamManager}}</div>
             </div>
-        </mat-card-content>
-    </mat-card>
+      </mat-expansion-panel>
+    </mat-accordion>    
 </div>

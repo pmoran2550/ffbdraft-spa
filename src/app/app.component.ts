@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { MatCardModule} from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +33,7 @@ import { NavbarComponent } from "./shared/components/navbar/navbar.component";
     FormsModule,
     FontAwesomeModule,
     MatDialogModule,
-    ReactiveFormsModule, NavbarComponent],
+    ReactiveFormsModule, NavbarComponent, MatExpansionModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

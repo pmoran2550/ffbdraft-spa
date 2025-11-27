@@ -1,5 +1,5 @@
 .player-card {
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     background-color:lightblue;
   }
 
@@ -25,3 +25,19 @@
     display: flex;
     justify-content: center;
   }
+
+mat-expansion-panel {
+    margin: 0px 0px;  
+    box-shadow: none;
+    padding: 0px;
+}
+
+.mat-expansion-panel-header {
+    min-height: 48px;
+    height: 48px;
+    padding: 0 8px !important;
+}
+
+.mat-expansion-panel-body {
+    padding: 4px 16px !important;
+}

@@ -157,10 +157,15 @@
 .scroll-container {
     height: 600px;
     width: 100%;
-  }
+}
   
-  .list-item {
-    padding: 10px;
-    height: 200px;
-  }
-  
+.list-item {
+    padding: 0px;  
+    margin: 0.5px;   
+}
+
+.players-scroll {
+    max-height: 600px;
+    overflow: auto;
+    gap: 0px;        
+}

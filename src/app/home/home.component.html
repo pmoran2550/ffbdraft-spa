@@ -56,14 +56,13 @@
 <div class="loading-message" *ngIf="isLoading; else content">
     Loading...
 </div>
-<ng-template #content>    
+<ng-template #content>
     <div class="players" *ngIf="filteredPlayerData.length > 0; else noFilteredData">
-        <cdk-virtual-scroll-viewport itemSize="200" class="scroll-container">
-            <app-player-card *cdkVirtualFor="let item of filteredPlayerData" class="list-item"
-            [player]="item">
+        <div class="players-scroll">
+            <app-player-card *ngFor="let item of filteredPlayerData" class="list-item" [player]="item">
             </app-player-card>
-            </cdk-virtual-scroll-viewport>
-    </div>
+        </div>
+    </div>    
     <ng-template  #noFilteredData>
         <div *ngIf="!isAuthenticated; else CheckPlayers" class="info-container">
             <mat-icon class="info-icon">block</mat-icon>
