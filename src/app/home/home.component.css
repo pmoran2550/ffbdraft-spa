@@ -169,3 +169,9 @@
     overflow: auto;
     gap: 0px;        
 }
+
+.expand-collapse-button {
+    display: flex;
+    width: 40%;
+    margin: 20px auto;
+}

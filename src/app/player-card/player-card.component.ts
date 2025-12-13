@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnDestroy } from '@angular/core';
+import { Component, inject, Input, OnDestroy, ViewChild } from '@angular/core';
 import { player } from '../models/player';
 import { AsyncPipe, NgIf, NgFor, NgForOf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -12,13 +12,13 @@ import { CommonModule } from '@angular/common';
 import { PickFfbTeamFormComponent } from '../pick-ffb-team-form/pick-ffb-team-form.component';
 import { MatDialog } from '@angular/material/dialog';
 import { PlayerService } from '../services/player.service';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatExpansionModule, MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-player-card',
   standalone: true,
   imports: [NgIf,MatCardModule, AsyncPipe, MatIconModule, 
-    MatButtonModule, MatFormFieldModule, MatExpansionModule, NgFor, NgForOf],
+    MatButtonModule, MatFormFieldModule, MatExpansionModule],
   templateUrl: './player-card.component.html',
   styleUrl: './player-card.component.css'
 })
@@ -33,6 +33,8 @@ export class PlayerCardComponent {
 
   @Input()
   teams: Observable<ffbteam[]> | undefined;
+
+   @ViewChild(MatExpansionPanel) private expansionPanel?: MatExpansionPanel;
 
   isEditing: boolean = false;
   isAdmin$ = this.authService.isAdmin$;
@@ -88,6 +90,26 @@ export class PlayerCardComponent {
           console.error('Error in put request: ', error);
         }
       });
+    }
+  }
+
+  expand(): void {
+    this.expansionPanel?.open();
+  }
+
+  collapse(): void {
+    this.expansionPanel?.close();
+  }
+
+  toggle(expand?: boolean): void {
+    if (expand === undefined) {
+      if (this.expansionPanel?.expanded) {
+        this.expansionPanel?.close();
+      } else {
+        this.expansionPanel?.open();
+      }
+    } else {
+      expand ? this.expansionPanel?.open() : this.expansionPanel?.close();
     }
   }
 

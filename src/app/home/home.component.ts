@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild,  } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren,  } from '@angular/core';
 import { debounceTime, finalize, map, Observable, Subject, Subscription, takeUntil, tap } from 'rxjs';
 import { AsyncPipe, NgFor, NgIf } from '@angular/common';
 import { player } from '../models/player';
@@ -61,6 +61,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   @ViewChild(CdkVirtualScrollViewport) viewport!: CdkVirtualScrollViewport;
   
+  @ViewChildren(PlayerCardComponent) playerCards!: QueryList<PlayerCardComponent>;
+  allExpanded: boolean = false;
+
   constructor(private playerService: PlayerService, 
     private teamservice: TeamService, 
     private fb: FormBuilder, 
@@ -253,6 +256,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.playerDataSubscription?.unsubscribe();
     this.findDataSubscription?.unsubscribe();
+  }
+
+  toggleExpandAll(): void {
+    const expand = !this.allExpanded;
+    this.playerCards.forEach(pc => pc.toggle(expand));
+    this.allExpanded = expand;
   }
 }
 
