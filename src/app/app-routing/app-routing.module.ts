@@ -10,6 +10,7 @@ import { LogoutButtonComponent } from '../shared/components/buttons/logout-butto
 
 import { AppRoutingRoutingModule } from './app-routing-routing.module';
 import { AuthGuard } from '@auth0/auth0-angular';
+import { DraftPageComponent } from '../draft-page/draft-page/draft-page.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent},
@@ -18,7 +19,8 @@ export const routes: Routes = [
   { path: 'app-about', component: AboutComponent},
   { path: 'app-contact', component: ContactComponent},
   { path: 'login', component: LoginButtonComponent},
-  { path: 'logout', component: LogoutButtonComponent}
+  { path: 'logout', component: LogoutButtonComponent},
+  { path: 'draft', component: DraftPageComponent, canActivate: [AuthGuard]},
 ];
 
 @NgModule({

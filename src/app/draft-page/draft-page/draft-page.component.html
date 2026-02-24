@@ -1,0 +1,27 @@
+<div class="draft-container">
+  <div class="draft-content">
+    <p>draft-page works!</p>
+  </div>
+
+  <div class="draft-table-container">
+    <h2>Round {{ draftRound }}</h2>
+    <table class="draft-table">
+      <thead>
+        <tr>
+          <th>Draft Order</th>
+          <th>Team Name</th>
+          <th>Team Manager</th>
+          <th>Player Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let pick of draftPicksCollection | filterByRound: draftRound">
+          <td>{{ pick.DraftOrder }}</td>
+          <td>{{ pick.TeamName }}</td>
+          <td>{{ pick.TeamManager }}</td>
+          <td>{{ pick.PlayerName }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -14,6 +14,9 @@
         <ng-container *ngIf="isAdmin$ | async">
           <button mat-button [routerLink]="['/teams']">Teams</button>
         </ng-container>
+        <ng-container *ngIf="isAdmin$ | async">
+          <button mat-button [routerLink]="['/draft']">Draft</button>
+        </ng-container>
         <button mat-button [routerLink]="['/app-about']">About</button>  
       </div>
   
@@ -34,7 +37,8 @@
     <mat-menu #menu="matMenu">
       <button mat-menu-item [routerLink]="['/app-home']">Home</button>
       <ng-container *ngIf="isAdmin$ | async">
-        <button mat-button [routerLink]="['/teams']">Teams</button>
+        <button mat-menu-item [routerLink]="['/teams']">Teams</button>
+        <button mat-menu-item [routerLink]="['/draft']">Draft</button>
       </ng-container>
     <button mat-menu-item [routerLink]="['/app-about']">About</button>
     </mat-menu>
