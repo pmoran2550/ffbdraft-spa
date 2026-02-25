@@ -1,0 +1,17 @@
+<div *ngIf="draftPick">
+    <mat-card class="draft-card">
+        <mat-card-header class="header">
+            <mat-card-title>
+                <div class="content-parent">
+                    <span>{{ draftPick.DraftOrder }}</span>
+                    <span>{{ draftPick.TeamName }}</span>
+                    <mat-card-subtitle><em>{{ draftPick.TeamManager }}</em></mat-card-subtitle>
+                </div>
+            </mat-card-title>        
+        </mat-card-header>
+        <mat-card-content class="content-parent">
+            <!-- <div class="content-item">{{ draftPick.PlayerName}}</div>   -->
+            <div class="content-item">Player Name</div>  
+        </mat-card-content>
+    </mat-card>
+</div>

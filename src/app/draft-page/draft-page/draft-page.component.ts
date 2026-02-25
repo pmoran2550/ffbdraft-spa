@@ -8,6 +8,7 @@ import { DraftService } from '../../services/draft.service';
 import { draftpick } from '../../models/draftpick';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DRAFT_ROUNDS, DRAFT_YEAR } from '../../constants';
+import { DraftCardComponent } from '../../draft-card/draft-card/draft-card.component';
 
 // Custom pipe to filter draft picks by round
 import { Pipe, PipeTransform } from '@angular/core';
@@ -31,7 +32,7 @@ export class FilterByRoundPipe implements PipeTransform {
 @Component({
   selector: 'app-draft-page',
   standalone: true,
-  imports: [CommonModule, FilterByRoundPipe],
+  imports: [CommonModule, FilterByRoundPipe, DraftCardComponent],
   templateUrl: './draft-page.component.html',
   styleUrl: './draft-page.component.css'
 })

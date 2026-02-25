@@ -5,23 +5,9 @@
 
   <div class="draft-table-container">
     <h2>Round {{ draftRound }}</h2>
-    <table class="draft-table">
-      <thead>
-        <tr>
-          <th>Draft Order</th>
-          <th>Team Name</th>
-          <th>Team Manager</th>
-          <th>Player Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let pick of draftPicksCollection | filterByRound: draftRound">
-          <td>{{ pick.DraftOrder }}</td>
-          <td>{{ pick.TeamName }}</td>
-          <td>{{ pick.TeamManager }}</td>
-          <td>{{ pick.PlayerName }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="draft-cards" *ngIf="draftPicksCollection && draftPicksCollection.length > 0">
+      <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick">
+      </app-draft-card>
+    </div>
   </div>
 </div>
