@@ -11,8 +11,19 @@
           {{ round }}
         </option>
       </select>
+      <button class="btn-edit-order" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0" (click)="startEditingOrder()">
+        ✎ Edit Order
+      </button>
     </div>
-    <div class="draft-cards" *ngIf="draftPicksCollection && draftPicksCollection.length > 0">
+
+    <app-draft-order-editor 
+      *ngIf="isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0"
+      [draftPicks]="draftPicksCollection"
+      (saveOrder)="onSaveOrder($event)"
+      (cancelEdit)="onCancelEdit()">
+    </app-draft-order-editor>
+
+    <div class="draft-cards" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0">
       <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick">
       </app-draft-card>
     </div>

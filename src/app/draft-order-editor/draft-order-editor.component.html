@@ -1,0 +1,26 @@
+<div class="editor-container">
+  <div class="editor-header">
+    <h3>Edit Draft Order</h3>
+    <p class="editor-hint">Drag to reorder teams</p>
+  </div>
+
+  <div class="editor-list" cdkDropList [cdkDropListData]="orderedTeams" (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let team of orderedTeams; let i = index"
+         class="order-item"
+         cdkDrag>
+      <div class="drag-handle">
+        <span class="position-badge">{{ i + 1 }}</span>
+        <span class="drag-icon">⋮⋮</span>
+      </div>
+      <div class="team-info">
+        <div class="team-name">{{ team.teamName }}</div>
+        <div class="team-manager">{{ team.teamManager }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-actions">
+    <button class="btn btn-save" (click)="onSave()">Save Order</button>
+    <button class="btn btn-cancel" (click)="onCancel()">Cancel</button>
+  </div>
+</div>

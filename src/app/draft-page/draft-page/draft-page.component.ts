@@ -10,6 +10,7 @@ import { draftpick } from '../../models/draftpick';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DRAFT_ROUNDS, DRAFT_YEAR } from '../../constants';
 import { DraftCardComponent } from '../../draft-card/draft-card/draft-card.component';
+import { DraftOrderEditorComponent } from '../../draft-order-editor/draft-order-editor.component';
 
 // Custom pipe to filter draft picks by round
 import { Pipe, PipeTransform } from '@angular/core';
@@ -34,7 +35,7 @@ export class FilterByRoundPipe implements PipeTransform {
 @Component({
   selector: 'app-draft-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, FilterByRoundPipe, DraftCardComponent],
+  imports: [CommonModule, FormsModule, FilterByRoundPipe, DraftCardComponent, DraftOrderEditorComponent],
   templateUrl: './draft-page.component.html',
   styleUrl: './draft-page.component.css'
 })
@@ -47,12 +48,28 @@ export class DraftPageComponent implements OnInit {
   errorMsg: string = "";
   draftRound: number = 1;
   draftPicksCollection: draftpick[] = [];
+  isEditingOrder: boolean = false;
 
   constructor(private playerService: PlayerService, private teamService: TeamService, private draftService: DraftService, private cdr: ChangeDetectorRef) {}
 
   onRoundChange(): void {
     localStorage.setItem('draftRound', this.draftRound.toString());
     this.cdr.detectChanges();
+  }
+
+  startEditingOrder(): void {
+    this.isEditingOrder = true;
+  }
+
+  onSaveOrder(updatedPicks: draftpick[]): void {
+    this.draftPicksCollection = updatedPicks;
+    this.isEditingOrder = false;
+    this.cdr.detectChanges();
+    console.log('Draft order updated:', this.draftPicksCollection);
+  }
+
+  onCancelEdit(): void {
+    this.isEditingOrder = false;
   }
 
   ngOnInit(): void {
