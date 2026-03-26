@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { finalize, map, Observable, Subscription, forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { player } from '../../models/player';
 import { PlayerService } from '../../services/player.service';
 import { TeamService } from '../../services/team.service';
@@ -15,7 +16,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'filterByRound',
-  standalone: true
+  standalone: true,
+  pure: false
 })
 export class FilterByRoundPipe implements PipeTransform {
   transform(picks: draftpick[], round: number): draftpick[] {
@@ -32,7 +34,7 @@ export class FilterByRoundPipe implements PipeTransform {
 @Component({
   selector: 'app-draft-page',
   standalone: true,
-  imports: [CommonModule, FilterByRoundPipe, DraftCardComponent],
+  imports: [CommonModule, FormsModule, FilterByRoundPipe, DraftCardComponent],
   templateUrl: './draft-page.component.html',
   styleUrl: './draft-page.component.css'
 })
@@ -46,9 +48,20 @@ export class DraftPageComponent implements OnInit {
   draftRound: number = 1;
   draftPicksCollection: draftpick[] = [];
 
-  constructor(private playerService: PlayerService, private teamService: TeamService, private draftService: DraftService) {}
+  constructor(private playerService: PlayerService, private teamService: TeamService, private draftService: DraftService, private cdr: ChangeDetectorRef) {}
+
+  onRoundChange(): void {
+    localStorage.setItem('draftRound', this.draftRound.toString());
+    this.cdr.detectChanges();
+  }
 
   ngOnInit(): void {
+    // Load the previously selected round from localStorage
+    const storedRound = localStorage.getItem('draftRound');
+    if (storedRound) {
+      this.draftRound = parseInt(storedRound, 10);
+    }
+
     forkJoin([
       this.teamService.getTeams(),
       this.draftService.getDraftPicks()
@@ -78,12 +91,12 @@ export class DraftPageComponent implements OnInit {
             
             // Fill in PlayerID and PlayerName from draftPicks results
             const matchingPick = draftPicks.find((pick: any) => 
-              pick.FFBTeamId === team.TeamID && pick.DraftNumber === round
+              pick.ffbteamId === team.id && pick.draftNumber === round
             );
             
             if (matchingPick) {
-              draftPick.PlayerID = matchingPick.PlayerID || '';
-              draftPick.PlayerName = matchingPick.PlayerName || '';
+              draftPick.PlayerID = matchingPick.playerId || '';
+              draftPick.PlayerName = matchingPick.playerName || '';
             }
             
             this.draftPicksCollection.push(draftPick);

@@ -4,7 +4,14 @@
   </div>
 
   <div class="draft-table-container">
-    <h2>Round {{ draftRound }}</h2>
+    <div class="round-selector">
+      <label for="roundSelect">Round:</label>
+      <select id="roundSelect" [(ngModel)]="draftRound" (change)="onRoundChange()">
+        <option *ngFor="let round of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]" [ngValue]="round">
+          {{ round }}
+        </option>
+      </select>
+    </div>
     <div class="draft-cards" *ngIf="draftPicksCollection && draftPicksCollection.length > 0">
       <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick">
       </app-draft-card>
