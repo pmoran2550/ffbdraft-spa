@@ -27,4 +27,22 @@ export class DraftService {
     let requestUrl = `${BASE_API_URL}/api/draft/${pickId}`;
     return this.apiService.deleteItem(requestUrl, undefined);
   }
+
+  updateDraftPick(pickId: string, updatedPick: draftpick): Observable<any> {
+    let requestUrl = `${BASE_API_URL}/api/draft/${pickId}`;
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const bodyStr = {
+      "id": pickId,
+      "draftNumber": updatedPick.Round,
+      "playerId": updatedPick.PlayerID,
+      "playerName": updatedPick.PlayerName,
+      "playerPosition": updatedPick.PlayerPosition,
+      "playerNFLTeam": updatedPick.PlayerNFLTeam,
+      "ffbteamId": updatedPick.TeamID,
+      "ffbTeamName": updatedPick.TeamName,
+      "ffbTeamManager": updatedPick.TeamManager,
+      "year": updatedPick.Year
+    }
+    return this.apiService.putRequest(requestUrl, updatedPick, headers);
+  }
 }

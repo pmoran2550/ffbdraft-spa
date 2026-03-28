@@ -27,7 +27,8 @@ export class PickFfbTeamFormComponent {
     manager: 'All',
     email: ' ',
     thirdpartyid: ' ',
-    nickname: ' '
+    nickname: ' ',
+    draftOrder: 0
   }
 
   constructor(private fb: FormBuilder, 

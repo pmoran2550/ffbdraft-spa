@@ -23,6 +23,21 @@ export class TeamService {
       return this.apiService.postRequest(requestUrl, newTeam, headers);
     }
 
+    putTeamUpdate(teamId: string, updatedTeam: ffbteam): Observable<any> {
+      let requestUrl = `${BASE_API_URL}/api/ffbteam/${teamId}`;
+      let headers = new HttpHeaders().set('Content-Type', 'application/json');
+      let bodyStr = {
+        "id": updatedTeam.id,
+        "name": updatedTeam.name,
+        "manager": updatedTeam.manager,
+        "email": updatedTeam.email,
+        "thirdpartyid": updatedTeam.thirdpartyid,
+        "nickname": updatedTeam.nickname,
+        "draftOrder": updatedTeam.draftOrder
+      }
+      return this.apiService.putRequest(requestUrl, bodyStr, headers);
+    }
+
     removeTeam(teamId: string): Observable<any> {
       let requestUrl = `${BASE_API_URL}/api/ffbteam/${teamId}`;
       return this.apiService.deleteItem(requestUrl, undefined);

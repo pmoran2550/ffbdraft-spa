@@ -5,4 +5,5 @@ export interface ffbteam {
     email: string;
     thirdpartyid: string;
     nickname: string;
+    draftOrder: number;
 }

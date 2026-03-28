@@ -18,7 +18,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'filterByRound',
   standalone: true,
-  pure: false
+  pure: true
 })
 export class FilterByRoundPipe implements PipeTransform {
   transform(picks: draftpick[], round: number): draftpick[] {
@@ -49,6 +49,8 @@ export class DraftPageComponent implements OnInit {
   draftRound: number = 1;
   draftPicksCollection: draftpick[] = [];
   isEditingOrder: boolean = false;
+  activeTeams: any[] = [];
+  isSaving: boolean = false; 
 
   constructor(private playerService: PlayerService, private teamService: TeamService, private draftService: DraftService, private cdr: ChangeDetectorRef) {}
 
@@ -61,16 +63,100 @@ export class DraftPageComponent implements OnInit {
     this.isEditingOrder = true;
   }
 
-  onSaveOrder(updatedPicks: draftpick[]): void {
-    this.draftPicksCollection = updatedPicks;
-    this.isEditingOrder = false;
-    this.cdr.detectChanges();
-    console.log('Draft order updated:', this.draftPicksCollection);
-  }
+onSaveOrder(updatedPicks: draftpick[]): void {
+  //this.draftPicksCollection = updatedPicks;
+  this.isEditingOrder = false;
+
+  const updatedPicksRound1 = updatedPicks.filter(pick => pick.Round === 1);
+
+  // Build an array of update observables
+  const updateRequests = this.activeTeams
+    .map(team => {
+      const updatedTeamPick = updatedPicksRound1.find(pick => pick.TeamID === team.id);
+      if (!updatedTeamPick) return null;
+
+      const updatedTeam = { ...team, draftOrder: updatedTeamPick.DraftOrder };
+      return this.teamService.putTeamUpdate(team.id, updatedTeam);
+    })
+    .filter(req => req !== null);
+
+  if (updateRequests.length === 0) return;
+
+  this.isSaving = true; // show a spinner/disable buttons in the UI
+
+  forkJoin(updateRequests).pipe(
+    finalize(() => {
+      this.isSaving = false; // always runs, even on error
+      this.cdr.detectChanges();
+    })
+  ).subscribe({
+    next: () => {
+      // All updates succeeded — now safe to update local state
+      this.activeTeams.forEach(team => {
+        const updatedTeamPick = updatedPicksRound1.find(pick => pick.TeamID === team.id);
+        if (updatedTeamPick) team.draftOrder = updatedTeamPick.DraftOrder;
+      });
+      this.activeTeams = [...this.activeTeams];
+      this.draftPicksCollection = this.createDraftPicksCollection(this.activeTeams, updatedPicks);
+      console.log('All draft orders updated successfully');
+    },
+    error: err => {
+      console.error('One or more updates failed:', err);
+      // Optionally revert UI or show an error message
+      this.errorMsg = 'Failed to save draft order. Please try again.';
+    }
+  });
+}
 
   onCancelEdit(): void {
     this.isEditingOrder = false;
   }
+
+  createDraftPicksCollection(teams: any[], draftPicks: any[]): draftpick[] {
+        this.draftPicksCollection = [];
+        
+        for (let round = 1; round <= DRAFT_ROUNDS; round++) {
+          for (let i = 0; i < this.activeTeams.length; i++) {
+            const team = this.activeTeams[i];
+            const draftPick: draftpick = {
+              id: '',
+              TeamID: team.id,
+              TeamName: team.name,
+              TeamManager: team.manager,
+              PlayerID: '',
+              PlayerName: '',
+              PlayerPosition: '',
+              PlayerNFLTeam: '',
+              Round: round,
+              DraftOrder: team.draftOrder, 
+              Year: DRAFT_YEAR
+            };
+            
+            // Fill in PlayerID and PlayerName from draftPicks results
+            const matchingPick = draftPicks.find((pick: any) => 
+              pick.ffbteamId === team.id && pick.draftNumber === round
+            );
+            
+            if (matchingPick) {
+              draftPick.id = matchingPick.id || '';
+              draftPick.PlayerID = matchingPick.playerId || '';
+              draftPick.PlayerName = matchingPick.playerName || '';
+              draftPick.PlayerPosition = matchingPick.playerPosition || '';
+              draftPick.PlayerNFLTeam = matchingPick.playerNFLTeam || '';
+            }
+            
+            this.draftPicksCollection.push(draftPick);
+          }
+        }
+        
+        // Sort draftPicksCollection by DraftOrder
+        this.draftPicksCollection.sort((a, b) => a.DraftOrder - b.DraftOrder);
+        
+        console.log('Both requests are complete');
+        console.log('Draft picks collection created with', this.draftPicksCollection.length, 'entries');
+
+        return this.draftPicksCollection;
+    }
 
   ngOnInit(): void {
     // Load the previously selected round from localStorage
@@ -88,43 +174,9 @@ export class DraftPageComponent implements OnInit {
         console.log('Draft picks loaded:', draftPicks);
         
         // Filter out the "Undrafted" team
-        const activeTeams = teams.filter((team: any) => team.name !== 'Undrafted');
+        this.activeTeams = teams.filter((team: any) => team.name !== 'Undrafted');
+        this.draftPicksCollection = this.createDraftPicksCollection(this.activeTeams, draftPicks);
         
-        this.draftPicksCollection = [];
-        
-        for (let round = 1; round <= DRAFT_ROUNDS; round++) {
-          for (let i = 0; i < activeTeams.length; i++) {
-            const team = activeTeams[i];
-            const draftPick: draftpick = {
-              DraftOrder: team.draftOrder, 
-              TeamID: team.id,
-              TeamName: team.name,
-              TeamManager: team.manager,
-              PlayerID: '',
-              PlayerName: '',
-              Round: round,
-              Year: DRAFT_YEAR
-            };
-            
-            // Fill in PlayerID and PlayerName from draftPicks results
-            const matchingPick = draftPicks.find((pick: any) => 
-              pick.ffbteamId === team.id && pick.draftNumber === round
-            );
-            
-            if (matchingPick) {
-              draftPick.PlayerID = matchingPick.playerId || '';
-              draftPick.PlayerName = matchingPick.playerName || '';
-            }
-            
-            this.draftPicksCollection.push(draftPick);
-          }
-        }
-        
-        // Sort draftPicksCollection by DraftOrder
-        this.draftPicksCollection.sort((a, b) => a.DraftOrder - b.DraftOrder);
-        
-        console.log('Both requests are complete');
-        console.log('Draft picks collection created with', this.draftPicksCollection.length, 'entries');
       },
       error: err => {
         console.error('Error loading data:', err);
