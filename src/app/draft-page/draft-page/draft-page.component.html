@@ -1,4 +1,32 @@
 <div class="draft-container">
+    <div class="players-draft" *ngIf="filteredPlayerData.length > 0; else noFilteredData">
+      <h2>Players</h2>
+      <mat-checkbox class="filter-position-checkbox" #QBCheckbox 
+        [(ngModel)] = "showAvailableOnly" 
+        (change)="availableFilterChanged($event)" 
+        color="primary">Show only available
+      </mat-checkbox>
+      <div class="players-scroll-draft">
+          <app-player-card *ngFor="let item of filteredPlayerData" class="list-item-draft" [player]="item">
+          </app-player-card>
+      </div>
+  </div>    
+  <ng-template #noFilteredData>
+      <ng-template>
+          <div *ngIf="playerData.length > 0; else noData" class="info-container-draft">
+              <mat-icon class="info-icon-draft">block</mat-icon>
+              <span class="info-message-draft">No players!</span>
+          </div>
+          <ng-template  #noData>
+              <div >
+                  <span class="error-icon-draft"><fa-icon class="error-icon-draft" [icon]="faExclamationTriangle"></fa-icon></span>
+                  <span class="error-message-draft">Error!</span>
+                  <span class="error-message-draft">{{ errorMsg }}</span>
+              </div>
+          </ng-template>   
+      </ng-template>
+  </ng-template>
+
   <div class="draft-content">
     <p>draft-page works!</p>
     <span *ngIf="isSaving">Saving...</span>
@@ -24,9 +52,11 @@
       (cancelEdit)="onCancelEdit()">
     </app-draft-order-editor>
 
-    <div class="draft-cards" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0">
-      <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick">
-      </app-draft-card>
+    <div class="draft-cards-container">
+      <div class="draft-cards" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0">
+        <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick">
+        </app-draft-card>
+      </div>
     </div>
   </div>
 </div>

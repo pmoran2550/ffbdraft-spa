@@ -11,9 +11,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { DRAFT_ROUNDS, DRAFT_YEAR } from '../../constants';
 import { DraftCardComponent } from '../../draft-card/draft-card/draft-card.component';
 import { DraftOrderEditorComponent } from '../../draft-order-editor/draft-order-editor.component';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 // Custom pipe to filter draft picks by round
 import { Pipe, PipeTransform } from '@angular/core';
+import { PlayerCardComponent } from "../../player-card/player-card.component";
+import { MatIcon } from "@angular/material/icon";
+import { FaIconComponent } from "@fortawesome/angular-fontawesome";
+import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 
 @Pipe({
   name: 'filterByRound',
@@ -35,7 +40,9 @@ export class FilterByRoundPipe implements PipeTransform {
 @Component({
   selector: 'app-draft-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, FilterByRoundPipe, DraftCardComponent, DraftOrderEditorComponent],
+  imports: [CommonModule, FormsModule, FilterByRoundPipe, 
+    DraftCardComponent, DraftOrderEditorComponent, 
+    PlayerCardComponent, MatIcon, FaIconComponent, MatCheckbox],
   templateUrl: './draft-page.component.html',
   styleUrl: './draft-page.component.css'
 })
@@ -51,6 +58,8 @@ export class DraftPageComponent implements OnInit {
   isEditingOrder: boolean = false;
   activeTeams: any[] = [];
   isSaving: boolean = false; 
+  faExclamationTriangle = faExclamationTriangle;
+  showAvailableOnly: boolean = false;
 
   constructor(private playerService: PlayerService, private teamService: TeamService, private draftService: DraftService, private cdr: ChangeDetectorRef) {}
 
@@ -159,6 +168,8 @@ onSaveOrder(updatedPicks: draftpick[]): void {
     }
 
   ngOnInit(): void {
+    this.getPlayerData(DRAFT_YEAR);
+
     // Load the previously selected round from localStorage
     const storedRound = localStorage.getItem('draftRound');
     if (storedRound) {
@@ -188,7 +199,11 @@ onSaveOrder(updatedPicks: draftpick[]): void {
     this.playerData$ = this.playerService.getPlayersByYear(year).pipe(
       map(players => players.map((player: any) => ({
         ...player,
-      })))
+      }))),
+      finalize(() => {
+        this.sort();
+        this.filter();    
+      })
     );
 
     const subscription = this.playerData$.subscribe({
@@ -214,4 +229,36 @@ onSaveOrder(updatedPicks: draftpick[]): void {
     this.playerDataSubscription?.unsubscribe(); // Cleanup previous
     this.playerDataSubscription = subscription;
   }  
+
+    sort(){
+    if (this.playerData.length > 0)
+    {
+      this.playerData.sort((a, b) => a.rank - b.rank);
+    }
+  }
+
+  filter() {
+    if (this.playerData.length > 0) {
+      this.filteredPlayerData = [];
+      this.playerData.forEach(player => {
+        if (!this.showAvailableOnly || 
+          ('Available' == player.ffbTeamManager)) 
+        {
+          this.filteredPlayerData.push(player);
+        }
+      })
+    }
+  }
+
+  availableFilterChanged(event: MatCheckboxChange) {
+    if (event.checked) {
+      this.showAvailableOnly = true;
+    }
+    else {
+      this.showAvailableOnly = false;
+    }
+
+    this.filter();
+  }
+  
 }

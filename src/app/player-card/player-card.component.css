@@ -1,30 +1,37 @@
 .player-card {
-    margin-bottom: 0px;
-    background-color:lightblue;
-  }
+  margin-bottom: 0px;
+  background-color:lightblue;
+}
 
-  .content-parent {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: space-between;
-  }
+.content-parent {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
 
-  .content-parent-FFBTeam {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
-    align-items: center;
-    margin-top: 5px;
-  }
+.subtitle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
-  .content-item {
-    flex-basis: auto;
-  }
+.content-parent-FFBTeam {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
 
-  .content-item-FFBTeam {
-    display: flex;
-    justify-content: center;
-  }
+.content-item {
+  flex-basis: auto;
+}
+
+.content-item-FFBTeam {
+  display: flex;
+  justify-content: center;
+}
 
 .mat-expansion-panel-header {
     min-height: 48px;
