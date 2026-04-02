@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { finalize, map, Observable, Subscription, forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { player } from '../../models/player';
 import { PlayerService } from '../../services/player.service';
 import { TeamService } from '../../services/team.service';
@@ -19,6 +19,7 @@ import { PlayerCardComponent } from "../../player-card/player-card.component";
 import { MatIcon } from "@angular/material/icon";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
+import { MatLabel } from '@angular/material/form-field';
 
 @Pipe({
   name: 'filterByRound',
@@ -42,7 +43,8 @@ export class FilterByRoundPipe implements PipeTransform {
   standalone: true,
   imports: [CommonModule, FormsModule, FilterByRoundPipe, 
     DraftCardComponent, DraftOrderEditorComponent, 
-    PlayerCardComponent, MatIcon, FaIconComponent, MatCheckbox],
+    PlayerCardComponent, MatIcon, FaIconComponent, MatCheckbox, 
+    MatLabel],
   templateUrl: './draft-page.component.html',
   styleUrl: './draft-page.component.css'
 })
@@ -60,8 +62,14 @@ export class DraftPageComponent implements OnInit {
   isSaving: boolean = false; 
   faExclamationTriangle = faExclamationTriangle;
   showAvailableOnly: boolean = false;
+  playerToFind: string = '';
 
-  constructor(private playerService: PlayerService, private teamService: TeamService, private draftService: DraftService, private cdr: ChangeDetectorRef) {}
+  constructor(private playerService: PlayerService, 
+    private teamService: TeamService, 
+    private draftService: DraftService, 
+    private cdr: ChangeDetectorRef) {
+
+  }
 
   onRoundChange(): void {
     localStorage.setItem('draftRound', this.draftRound.toString());
@@ -241,8 +249,9 @@ onSaveOrder(updatedPicks: draftpick[]): void {
     if (this.playerData.length > 0) {
       this.filteredPlayerData = [];
       this.playerData.forEach(player => {
-        if (!this.showAvailableOnly || 
-          ('Available' == player.ffbTeamManager)) 
+        if ((!this.showAvailableOnly || 
+          ('Available' == player.ffbTeamManager)) && 
+          player.name.toLocaleLowerCase().includes(this.playerToFind.toLowerCase())) 
         {
           this.filteredPlayerData.push(player);
         }
@@ -258,6 +267,10 @@ onSaveOrder(updatedPicks: draftpick[]): void {
       this.showAvailableOnly = false;
     }
 
+    this.filter();
+  }
+
+  onPlayerSearch(value: string) {
     this.filter();
   }
   

@@ -178,3 +178,13 @@ draft-cards-container {
     color: #dc3545;
     font-size: 5rem;
 }
+
+.draft-filters {
+  display: flex;
+  align-items: center;
+  gap: 12px;        /* space between all three elements */
+}
+
+.filter-position-checkbox {
+  margin-right: 4px;  /* optional extra space after checkbox if needed */
+}
