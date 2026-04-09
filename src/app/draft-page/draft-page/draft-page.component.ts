@@ -63,6 +63,8 @@ export class DraftPageComponent implements OnInit {
   faExclamationTriangle = faExclamationTriangle;
   showAvailableOnly: boolean = false;
   playerToFind: string = '';
+  selectedPlayer: player | undefined = undefined;
+  selectedDraftPick: draftpick | undefined = undefined;
 
   constructor(private playerService: PlayerService, 
     private teamService: TeamService, 
@@ -160,6 +162,8 @@ onSaveOrder(updatedPicks: draftpick[]): void {
               draftPick.PlayerName = matchingPick.playerName || '';
               draftPick.PlayerPosition = matchingPick.playerPosition || '';
               draftPick.PlayerNFLTeam = matchingPick.playerNFLTeam || '';
+            } else if (this.selectedDraftPick === undefined) {
+              this.selectedDraftPick = draftPick;
             }
             
             this.draftPicksCollection.push(draftPick);
@@ -255,6 +259,10 @@ onSaveOrder(updatedPicks: draftpick[]): void {
         {
           this.filteredPlayerData.push(player);
         }
+
+        if ('Available' == player.ffbTeamManager && this.selectedPlayer === undefined) {
+          this.selectedPlayer = player;
+        }
       })
     }
   }
@@ -272,6 +280,14 @@ onSaveOrder(updatedPicks: draftpick[]): void {
 
   onPlayerSearch(value: string) {
     this.filter();
+  }
+
+  onDraftCardClicked(pick: draftpick): void {
+    this.selectedDraftPick = pick;
+  }
+
+  onPlayerCardClicked(player: player): void {
+    this.selectedPlayer = player;
   }
   
 }

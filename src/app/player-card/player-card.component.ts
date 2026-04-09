@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnDestroy, Output, ViewChild } from '@angular/core';
 import { player } from '../models/player';
 import { AsyncPipe, NgIf, NgFor, NgForOf } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -34,12 +34,24 @@ export class PlayerCardComponent {
   @Input()
   teams: Observable<ffbteam[]> | undefined;
 
+  @Input()
+  isSelected: boolean = false;
+
+  @Output()
+  cardClicked = new EventEmitter<player>();
+
    @ViewChild(MatExpansionPanel) private expansionPanel?: MatExpansionPanel;
 
   isEditing: boolean = false;
   isAdmin$ = this.authService.isAdmin$;
   destroy$ = new Subject<void>();
   showAll: boolean = false;
+
+  onCardClicked(): void {
+    if (this.player) {
+      this.cardClicked.emit(this.player);
+    }
+  }
 
   editFFBTeam(player: any): void {
     this.isEditing = true;

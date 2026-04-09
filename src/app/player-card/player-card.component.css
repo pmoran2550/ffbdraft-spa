@@ -3,6 +3,10 @@
   background-color:lightblue;
 }
 
+.player-card.selected-player {
+  background-color: #ba9bda !important;
+}
+
 .content-parent {
   display: flex;
   flex-flow: row wrap;

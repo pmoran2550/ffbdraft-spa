@@ -14,7 +14,8 @@
             placeholder="Find..." />
       </div>
       <div class="players-scroll-draft">
-          <app-player-card *ngFor="let item of filteredPlayerData" class="list-item-draft" [player]="item">
+          <app-player-card *ngFor="let item of filteredPlayerData" class="list-item-draft" [player]="item" 
+            [isSelected]="selectedPlayer === item" (cardClicked)="onPlayerCardClicked($event)">
           </app-player-card>
       </div>
   </div>    
@@ -61,7 +62,9 @@
 
     <div class="draft-cards-container">
       <div class="draft-cards" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0">
-        <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick">
+        <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick" 
+            [isSelected]="selectedDraftPick === pick"
+            (cardClicked)="onDraftCardClicked($event)">
         </app-draft-card>
       </div>
     </div>

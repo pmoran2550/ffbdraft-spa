@@ -1,5 +1,5 @@
 <div *ngIf="draftPick">
-    <mat-card class="draft-card">
+    <mat-card class="draft-card" [class.selected-draftPick]="isSelected" (click)="onCardClick()" style="cursor: pointer;">
         <mat-card-header class="header">
             <mat-card-title>
                 <div class="content-parent">

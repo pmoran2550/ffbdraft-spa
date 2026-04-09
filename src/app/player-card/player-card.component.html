@@ -1,5 +1,5 @@
 <div *ngIf="player">
-    <mat-card class="player-card">
+    <mat-card class="player-card" [class.selected-player]="isSelected" (click)="onCardClicked()" style="cursor: pointer">
       <mat-card-header>
         <mat-card-title>
           {{ player.rank}} {{ player.name}}

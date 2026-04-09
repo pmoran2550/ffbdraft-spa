@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { draftpick } from '../../models/draftpick';
 import { player } from '../../models/player';
 import { MatCardModule } from '@angular/material/card';
@@ -19,5 +19,15 @@ export class DraftCardComponent {
   @Input()
   player: player | undefined;
 
-  
+  @Input()
+  isSelected: boolean = false;
+
+  @Output()
+  cardClicked = new EventEmitter<draftpick>();
+
+  onCardClick(): void {
+    if (this.draftPick) {
+      this.cardClicked.emit(this.draftPick);
+    }
+  }
 }

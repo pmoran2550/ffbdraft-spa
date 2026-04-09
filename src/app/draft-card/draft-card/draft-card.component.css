@@ -3,6 +3,10 @@
     background-color: lightblue;
   }
 
+  .draft-card.selected-draftPick {
+    background-color: #ba9bda !important;
+  }
+
   .header {
     margin-bottom: 2px;
     width: 100%;
