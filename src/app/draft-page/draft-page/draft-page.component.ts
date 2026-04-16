@@ -20,6 +20,7 @@ import { MatIcon } from "@angular/material/icon";
 import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatLabel } from '@angular/material/form-field';
+import { ffbteam } from '../../models/ffbteam';
 
 @Pipe({
   name: 'filterByRound',
@@ -288,6 +289,52 @@ onSaveOrder(updatedPicks: draftpick[]): void {
 
   onPlayerCardClicked(player: player): void {
     this.selectedPlayer = player;
+  }
+
+  onDraftPlayer(): void {
+    if (!this.selectedPlayer || !this.selectedDraftPick) {
+      return;
+    }
+
+    // Update the selected draft pick with player information
+    this.selectedDraftPick.PlayerID = this.selectedPlayer.id;
+    this.selectedDraftPick.PlayerName = this.selectedPlayer.name;
+    this.selectedDraftPick.PlayerPosition = this.selectedPlayer.position;
+    this.selectedDraftPick.PlayerNFLTeam = this.selectedPlayer.nflTeam;
+    
+
+    // Create a subscription to handle the draft pick update
+    this.isSaving = true;
+    this.draftService.addDraftPick(this.selectedDraftPick).pipe(
+      finalize(() => {
+        this.isSaving = false;
+        this.cdr.detectChanges();
+      })
+    ).subscribe({
+      next: () => {
+        console.log('Draft pick saved successfully');
+        // Update the player as drafted in the local data
+        if (this.selectedPlayer) {
+          //const selectedTeam: ffbteam = this.activeTeams.find(team => team.TeamID == this.selectedDraftPick?.TeamID);
+          if (this.selectedDraftPick?.TeamID && 
+            this.selectedDraftPick.TeamManager && 
+            this.selectedDraftPick.TeamName) {
+              this.selectedPlayer.ffbTeamName = this.selectedDraftPick.TeamName;
+              this.selectedPlayer.ffbTeam = this.selectedDraftPick.TeamID;
+              this.selectedPlayer.ffbTeamName = this.selectedDraftPick.TeamName;
+          }
+        }
+        // Move to next available player
+        this.filter();
+        // Clear selections for next pick
+        this.selectedPlayer = undefined;
+        this.selectedDraftPick = undefined;
+      },
+      error: (err) => {
+        console.error('Error saving draft pick:', err);
+        this.errorMsg = 'Failed to save draft pick. Please try again.';
+      }
+    });
   }
   
 }

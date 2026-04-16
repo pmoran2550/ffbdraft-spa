@@ -18,7 +18,7 @@
             [isSelected]="selectedPlayer === item" (cardClicked)="onPlayerCardClicked($event)">
           </app-player-card>
       </div>
-  </div>    
+    </div> 
   <ng-template #noFilteredData>
       <ng-template>
           <div *ngIf="playerData.length > 0; else noData" class="info-container-draft">
@@ -35,9 +35,12 @@
       </ng-template>
   </ng-template>
 
-  <div class="draft-content">
-    <p>draft-page works!</p>
-    <span *ngIf="isSaving">Saving...</span>
+  <div class="draft-button-container">
+    <button class="draft-button" 
+            [disabled]="!selectedPlayer || !selectedDraftPick || isSaving"
+            (click)="onDraftPlayer()">
+      Draft Player
+    </button>
   </div>
 
   <div class="draft-table-container">
