@@ -3,11 +3,12 @@ import { draftpick } from '../../models/draftpick';
 import { player } from '../../models/player';
 import { MatCardModule } from '@angular/material/card';
 import { NgIf } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-draft-card',
   standalone: true,
-  imports: [NgIf, MatCardModule],
+  imports: [NgIf, MatCardModule, MatIconModule],
   templateUrl: './draft-card.component.html',
   styleUrl: './draft-card.component.css'
 })

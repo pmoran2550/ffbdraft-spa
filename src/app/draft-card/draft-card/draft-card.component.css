@@ -15,14 +15,30 @@
 .content-parent {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
     gap: 15px;
-    width: 100%;
   }
+
+.content-parent-playername {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}
+
+.content-item-playername {
+  flex-basis: auto;
+}
 
 .content-item {
     width: 100%;
   }
+
+.content-item-playername {
+  display: flex;
+  justify-content: center;
+}
   
 mat-card-title {
   font-family: 'Arial', sans-serif;

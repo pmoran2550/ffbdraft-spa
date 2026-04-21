@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { finalize, map, Observable, Subscription, forkJoin } from 'rxjs';
+import { finalize, map, Observable, Subscription, forkJoin, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { player } from '../../models/player';
@@ -315,17 +315,14 @@ onSaveOrder(updatedPicks: draftpick[]): void {
         console.log('Draft pick saved successfully');
         // Update the player as drafted in the local data
         if (this.selectedPlayer) {
-          //const selectedTeam: ffbteam = this.activeTeams.find(team => team.TeamID == this.selectedDraftPick?.TeamID);
           if (this.selectedDraftPick?.TeamID && 
             this.selectedDraftPick.TeamManager && 
             this.selectedDraftPick.TeamName) {
               this.selectedPlayer.ffbTeamName = this.selectedDraftPick.TeamName;
               this.selectedPlayer.ffbTeam = this.selectedDraftPick.TeamID;
-              this.selectedPlayer.ffbTeamName = this.selectedDraftPick.TeamName;
+              this.selectedPlayer.ffbTeamManager = this.selectedDraftPick.TeamManager;
           }
         }
-        // Move to next available player
-        this.filter();
         // Clear selections for next pick
         this.selectedPlayer = undefined;
         this.selectedDraftPick = undefined;

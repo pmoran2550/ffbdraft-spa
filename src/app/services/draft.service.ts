@@ -20,7 +20,18 @@ export class DraftService {
   addDraftPick(newPick: draftpick): Observable<any> {
     let requestUrl = `${BASE_API_URL}/api/draft`;
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.apiService.postRequest(requestUrl, newPick, headers);
+    const bodyStr = {
+        "DraftNumber": newPick.Round,
+        "FfbteamId": newPick.TeamID, 
+        "FFBTeamName": newPick.TeamName, 
+        "FFBTeamManager": newPick.TeamManager, 
+        "PlayerID": newPick.PlayerID, 
+        "PlayerName": newPick.PlayerName,
+        "PlayerPosition": newPick.PlayerPosition,
+        "PlayerNFLTeam": newPick.PlayerNFLTeam,
+        "Year": newPick.Year
+    }
+    return this.apiService.postRequest(requestUrl, bodyStr, headers);
   }
 
   removeDraftPick(pickId: string): Observable<any> {

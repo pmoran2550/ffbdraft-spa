@@ -9,9 +9,13 @@
                 </div>
             </mat-card-title>        
         </mat-card-header>
-        <mat-card-content class="content-parent">
-            <div class="content-item">{{ draftPick.PlayerName}}</div>  
-            <!-- <div class="content-item">Player Name</div>   -->
+        <mat-card-content class="content-parent-playername">
+            <div class="content-item-playername" *ngIf="draftPick.PlayerName.length > 0" >
+                <button mat-icon-button >
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            <div class="content-item-playername">{{ draftPick.PlayerName}}</div>  
         </mat-card-content>
     </mat-card>
 </div>
