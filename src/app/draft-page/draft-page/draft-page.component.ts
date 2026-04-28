@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
-import { finalize, map, Observable, Subscription, forkJoin, takeUntil } from 'rxjs';
+import { finalize, map, Observable, Subscription, forkJoin, takeUntil, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { player } from '../../models/player';
@@ -66,6 +66,7 @@ export class DraftPageComponent implements OnInit {
   playerToFind: string = '';
   selectedPlayer: player | undefined = undefined;
   selectedDraftPick: draftpick | undefined = undefined;
+  destroy$ = new Subject<void>();
 
   constructor(private playerService: PlayerService, 
     private teamService: TeamService, 
@@ -83,50 +84,50 @@ export class DraftPageComponent implements OnInit {
     this.isEditingOrder = true;
   }
 
-onSaveOrder(updatedPicks: draftpick[]): void {
-  //this.draftPicksCollection = updatedPicks;
-  this.isEditingOrder = false;
+  onSaveOrder(updatedPicks: draftpick[]): void {
+    //this.draftPicksCollection = updatedPicks;
+    this.isEditingOrder = false;
 
-  const updatedPicksRound1 = updatedPicks.filter(pick => pick.Round === 1);
+    const updatedPicksRound1 = updatedPicks.filter(pick => pick.Round === 1);
 
-  // Build an array of update observables
-  const updateRequests = this.activeTeams
-    .map(team => {
-      const updatedTeamPick = updatedPicksRound1.find(pick => pick.TeamID === team.id);
-      if (!updatedTeamPick) return null;
-
-      const updatedTeam = { ...team, draftOrder: updatedTeamPick.DraftOrder };
-      return this.teamService.putTeamUpdate(team.id, updatedTeam);
-    })
-    .filter(req => req !== null);
-
-  if (updateRequests.length === 0) return;
-
-  this.isSaving = true; // show a spinner/disable buttons in the UI
-
-  forkJoin(updateRequests).pipe(
-    finalize(() => {
-      this.isSaving = false; // always runs, even on error
-      this.cdr.detectChanges();
-    })
-  ).subscribe({
-    next: () => {
-      // All updates succeeded — now safe to update local state
-      this.activeTeams.forEach(team => {
+    // Build an array of update observables
+    const updateRequests = this.activeTeams
+      .map(team => {
         const updatedTeamPick = updatedPicksRound1.find(pick => pick.TeamID === team.id);
-        if (updatedTeamPick) team.draftOrder = updatedTeamPick.DraftOrder;
-      });
-      this.activeTeams = [...this.activeTeams];
-      this.draftPicksCollection = this.createDraftPicksCollection(this.activeTeams, updatedPicks);
-      console.log('All draft orders updated successfully');
-    },
-    error: err => {
-      console.error('One or more updates failed:', err);
-      // Optionally revert UI or show an error message
-      this.errorMsg = 'Failed to save draft order. Please try again.';
-    }
-  });
-}
+        if (!updatedTeamPick) return null;
+
+        const updatedTeam = { ...team, draftOrder: updatedTeamPick.DraftOrder };
+        return this.teamService.putTeamUpdate(team.id, updatedTeam);
+      })
+      .filter(req => req !== null);
+
+    if (updateRequests.length === 0) return;
+
+    this.isSaving = true; // show a spinner/disable buttons in the UI
+
+    forkJoin(updateRequests).pipe(
+      finalize(() => {
+        this.isSaving = false; // always runs, even on error
+        this.cdr.detectChanges();
+      })
+    ).subscribe({
+      next: () => {
+        // All updates succeeded — now safe to update local state
+        this.activeTeams.forEach(team => {
+          const updatedTeamPick = updatedPicksRound1.find(pick => pick.TeamID === team.id);
+          if (updatedTeamPick) team.draftOrder = updatedTeamPick.DraftOrder;
+        });
+        this.activeTeams = [...this.activeTeams];
+        this.draftPicksCollection = this.createDraftPicksCollection(this.activeTeams, updatedPicks);
+        console.log('All draft orders updated successfully');
+      },
+      error: err => {
+        console.error('One or more updates failed:', err);
+        // Optionally revert UI or show an error message
+        this.errorMsg = 'Failed to save draft order. Please try again.';
+      }
+    });
+  }
 
   onCancelEdit(): void {
     this.isEditingOrder = false;
@@ -181,6 +182,10 @@ onSaveOrder(updatedPicks: draftpick[]): void {
     }
 
   ngOnInit(): void {
+    this.getDraftPickData();
+  }
+
+  getDraftPickData() {
     this.getPlayerData(DRAFT_YEAR);
 
     // Load the previously selected round from localStorage
@@ -334,4 +339,19 @@ onSaveOrder(updatedPicks: draftpick[]): void {
     });
   }
   
+  deletePick(pick: draftpick): void {
+    console.log("ready to remove ", pick);
+    this.draftService.deleteDraftPick(pick.id)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (resp: any) => { 
+        this.getDraftPickData();
+      },
+      error: (error) => {
+        console.error('Error in post request: ', error);
+      }
+    });
+
+  }
+
 }

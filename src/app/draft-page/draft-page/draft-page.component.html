@@ -66,7 +66,7 @@
     <div class="draft-cards-container">
       <div class="draft-cards" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0">
         <app-draft-card *ngFor="let pick of draftPicksCollection | filterByRound: draftRound" [draftPick]="pick" 
-            [isSelected]="selectedDraftPick === pick"
+            [isSelected]="selectedDraftPick === pick" (deleteEvent)="deletePick(pick)"
             (cardClicked)="onDraftCardClicked($event)">
         </app-draft-card>
       </div>

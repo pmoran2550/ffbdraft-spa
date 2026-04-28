@@ -56,4 +56,9 @@ export class DraftService {
     }
     return this.apiService.putRequest(requestUrl, updatedPick, headers);
   }
+
+  deleteDraftPick(pickId: string): Observable<any> {
+    let requestUrl = `${BASE_API_URL}/api/draft/${pickId}`;
+    return this.apiService.deleteItem(requestUrl, undefined);
+  }
 }

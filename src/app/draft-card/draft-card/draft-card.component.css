@@ -27,10 +27,6 @@
   gap: 4px;
 }
 
-.content-item-playername {
-  flex-basis: auto;
-}
-
 .content-item {
     width: 100%;
   }
@@ -38,8 +34,14 @@
 .content-item-playername {
   display: flex;
   justify-content: center;
+  flex-basis: auto;
 }
   
+.content-item-button {
+  background-color: transparent;
+  border: none;
+}
+
 mat-card-title {
   font-family: 'Arial', sans-serif;
   font-size: 16px; /* Example font size */

@@ -26,9 +26,16 @@ export class DraftCardComponent {
   @Output()
   cardClicked = new EventEmitter<draftpick>();
 
+  @Output()
+  deleteEvent = new EventEmitter<draftpick>();
+
   onCardClick(): void {
     if (this.draftPick) {
       this.cardClicked.emit(this.draftPick);
     }
+  }
+
+  deleteDraftPick(draftPick: any) {
+    this.deleteEvent.emit(draftPick);
   }
 }

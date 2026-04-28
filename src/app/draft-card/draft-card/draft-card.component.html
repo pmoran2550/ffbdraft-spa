@@ -11,7 +11,7 @@
         </mat-card-header>
         <mat-card-content class="content-parent-playername">
             <div class="content-item-playername" *ngIf="draftPick.PlayerName.length > 0" >
-                <button mat-icon-button >
+                <button mat-icon-button (click)="deleteDraftPick(draftPick)" >
                     <mat-icon>delete</mat-icon>
                 </button>
             </div>
