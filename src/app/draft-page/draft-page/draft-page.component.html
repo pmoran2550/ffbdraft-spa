@@ -1,24 +1,24 @@
 <div class="draft-container">
-    <div class="players-draft" *ngIf="filteredPlayerData.length > 0; else noFilteredData">
-      <h2>Players</h2>
-      <div class="draft-filters">
-        <mat-checkbox class="filter-position-checkbox" #QBCheckbox 
-          [(ngModel)] = "showAvailableOnly" 
-          (change)="availableFilterChanged($event)" 
-          color="primary">Show only available
-        </mat-checkbox>
-        <mat-label class="find-player-box" >Find a player: </mat-label>
-        <input type="text" 
-            [(ngModel)]="playerToFind"
-            (ngModelChange)="onPlayerSearch($event)"
-            placeholder="Find..." />
-      </div>
-      <div class="players-scroll-draft">
-          <app-player-card *ngFor="let item of filteredPlayerData" class="list-item-draft" [player]="item" 
-            [isSelected]="selectedPlayer === item" (cardClicked)="onPlayerCardClicked($event)">
-          </app-player-card>
-      </div>
-    </div> 
+  <div class="players-draft" *ngIf="filteredPlayerData.length > 0; else noFilteredData">
+    <h2>Players</h2>
+    <div class="draft-filters">
+      <mat-checkbox class="filter-position-checkbox" #QBCheckbox 
+        [(ngModel)] = "showAvailableOnly" 
+        (change)="availableFilterChanged($event)" 
+        color="primary">Show only available
+      </mat-checkbox>
+      <mat-label class="find-player-box" >Find a player: </mat-label>
+      <input type="text" 
+          [(ngModel)]="playerToFind"
+          (ngModelChange)="onPlayerSearch($event)"
+          placeholder="Find..." />
+    </div>
+    <div class="players-scroll-draft">
+        <app-player-card *ngFor="let item of filteredPlayerData" class="list-item-draft" [player]="item" 
+          [isSelected]="selectedPlayer === item" (cardClicked)="onPlayerCardClicked($event)">
+        </app-player-card>
+    </div>
+  </div> 
   <ng-template #noFilteredData>
       <ng-template>
           <div *ngIf="playerData.length > 0; else noData" class="info-container-draft">

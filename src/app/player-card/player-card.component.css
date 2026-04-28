@@ -1,5 +1,6 @@
 .player-card {
-  margin-bottom: 0px;
+  margin: 0 !important;
+  padding: 2px;
   background-color:lightblue;
 }
 
@@ -16,7 +17,7 @@
 .subtitle-row {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 2px;
   flex-wrap: wrap;
 }
 
