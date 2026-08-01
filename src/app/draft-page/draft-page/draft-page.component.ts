@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { finalize, map, Observable, Subscription, forkJoin, takeUntil, Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
@@ -21,6 +21,7 @@ import { FaIconComponent } from "@fortawesome/angular-fontawesome";
 import { MatCheckbox, MatCheckboxChange } from '@angular/material/checkbox';
 import { MatLabel } from '@angular/material/form-field';
 import { ffbteam } from '../../models/ffbteam';
+import { teamroster } from '../../models/teamroster';
 
 @Pipe({
   name: 'filterByRound',
@@ -67,6 +68,11 @@ export class DraftPageComponent implements OnInit {
   selectedPlayer: player | undefined = undefined;
   selectedDraftPick: draftpick | undefined = undefined;
   destroy$ = new Subject<void>();
+  draftYear = DRAFT_YEAR;
+  printRosters: teamroster[] = [];
+  printPicksMade: number = 0;
+  printTotalPicks: number = 0;
+  printedOn: string = '';
 
   constructor(private playerService: PlayerService, 
     private teamService: TeamService, 
@@ -164,19 +170,19 @@ export class DraftPageComponent implements OnInit {
               draftPick.PlayerName = matchingPick.playerName || '';
               draftPick.PlayerPosition = matchingPick.playerPosition || '';
               draftPick.PlayerNFLTeam = matchingPick.playerNFLTeam || '';
-            } else if (this.selectedDraftPick === undefined) {
-              this.selectedDraftPick = draftPick;
             }
-            
+
             this.draftPicksCollection.push(draftPick);
           }
         }
-        
+
         // Sort draftPicksCollection by DraftOrder
         this.draftPicksCollection.sort((a, b) => a.DraftOrder - b.DraftOrder);
-        
+
         console.log('Both requests are complete');
         console.log('Draft picks collection created with', this.draftPicksCollection.length, 'entries');
+
+        this.selectNextDraftPick();
 
         return this.draftPicksCollection;
     }
@@ -259,18 +265,41 @@ export class DraftPageComponent implements OnInit {
     if (this.playerData.length > 0) {
       this.filteredPlayerData = [];
       this.playerData.forEach(player => {
-        if ((!this.showAvailableOnly || 
-          ('Available' == player.ffbTeamManager)) && 
-          player.name.toLocaleLowerCase().includes(this.playerToFind.toLowerCase())) 
+        if ((!this.showAvailableOnly ||
+          ('Available' == player.ffbTeamManager)) &&
+          player.name.toLocaleLowerCase().includes(this.playerToFind.toLowerCase()))
         {
           this.filteredPlayerData.push(player);
         }
-
-        if ('Available' == player.ffbTeamManager && this.selectedPlayer === undefined) {
-          this.selectedPlayer = player;
-        }
       })
+      if (this.filteredPlayerData.length > 0)
+      {
+        this.filteredPlayerData.sort((a, b) => a.rank - b.rank);
+      }
+
+      if (this.selectedPlayer === undefined) {
+        this.selectNextAvailablePlayer();
+      }
     }
+  }
+
+  // Highlights the available player with the lowest (best) rank
+  selectNextAvailablePlayer(): void {
+    this.selectedPlayer = this.playerData.find(player => player.ffbTeamManager === 'Available');
+  }
+
+  // Highlights the next pick in snake draft order: odd rounds run draft position
+  // 1 -> N, even rounds reverse and run N -> 1
+  selectNextDraftPick(): void {
+    const orderedPicks = [...this.draftPicksCollection].sort((a, b) => {
+      if (a.Round !== b.Round) {
+        return a.Round - b.Round;
+      }
+      return (a.Round % 2 === 1)
+        ? a.DraftOrder - b.DraftOrder
+        : b.DraftOrder - a.DraftOrder;
+    });
+    this.selectedDraftPick = orderedPicks.find(pick => !pick.PlayerID);
   }
 
   availableFilterChanged(event: MatCheckboxChange) {
@@ -290,6 +319,49 @@ export class DraftPageComponent implements OnInit {
 
   onDraftCardClicked(pick: draftpick): void {
     this.selectedDraftPick = pick;
+  }
+
+  // Group the draft picks into one roster per team, teams in draft order and picks in round order
+  buildTeamRosters(): teamroster[] {
+    const rostersByTeam = new Map<string, teamroster>();
+
+    this.draftPicksCollection.forEach(pick => {
+      let roster = rostersByTeam.get(pick.TeamID);
+      if (!roster) {
+        roster = {
+          TeamID: pick.TeamID,
+          TeamName: pick.TeamName,
+          TeamManager: pick.TeamManager,
+          DraftOrder: pick.DraftOrder,
+          Picks: []
+        };
+        rostersByTeam.set(pick.TeamID, roster);
+      }
+      roster.Picks.push(pick);
+    });
+
+    const rosters = Array.from(rostersByTeam.values());
+    rosters.forEach(roster => roster.Picks.sort((a, b) => a.Round - b.Round));
+    rosters.sort((a, b) => a.DraftOrder - b.DraftOrder);
+
+    return rosters;
+  }
+
+  // Also fires for the browser's own print command, not just the Print Draft button
+  @HostListener('window:beforeprint')
+  refreshPrintData(): void {
+    this.printRosters = this.buildTeamRosters();
+    this.printTotalPicks = this.draftPicksCollection.length;
+    this.printPicksMade = this.draftPicksCollection.filter(pick => !!pick.PlayerName).length;
+    this.printedOn = new Date().toLocaleString();
+
+    // Render the print-only section before the browser lays out the page
+    this.cdr.detectChanges();
+  }
+
+  onPrintDraft(): void {
+    this.refreshPrintData();
+    window.print();
   }
 
   onPlayerCardClicked(player: player): void {
@@ -328,9 +400,18 @@ export class DraftPageComponent implements OnInit {
               this.selectedPlayer.ffbTeamManager = this.selectedDraftPick.TeamManager;
           }
         }
-        // Clear selections for next pick
+
+        const draftedPlayerId = this.selectedPlayer?.id;
+        if (draftedPlayerId !== undefined) {
+          this.playerData = this.playerData.filter(player => player.id !== draftedPlayerId);
+          this.filteredPlayerData = this.filteredPlayerData.filter(player => player.id !== draftedPlayerId);
+        }
+
+        // Clear selections, then highlight the next best-available player and next open pick
         this.selectedPlayer = undefined;
         this.selectedDraftPick = undefined;
+        this.selectNextAvailablePlayer();
+        this.selectNextDraftPick();
       },
       error: (err) => {
         console.error('Error saving draft pick:', err);

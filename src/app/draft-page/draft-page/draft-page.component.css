@@ -98,8 +98,15 @@ draft-cards-container {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
 }
 
-.btn-edit-order {
+.round-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin-left: auto;
+}
+
+.btn-edit-order,
+.btn-print {
   padding: 10px 16px;
   font-size: 14px;
   font-weight: 600;
@@ -113,13 +120,15 @@ draft-cards-container {
   white-space: nowrap;
 }
 
-.btn-edit-order:hover {
+.btn-edit-order:hover,
+.btn-print:hover {
   background-color: #f5f5f5;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
 }
 
-.btn-edit-order:active {
+.btn-edit-order:active,
+.btn-print:active {
   transform: translateY(0);
 }
 
@@ -214,4 +223,93 @@ draft-cards-container {
 .draft-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Printable draft status - hidden on screen, laid out for paper */
+.print-draft-status {
+  display: none;
+}
+
+@media print {
+  .draft-container {
+    display: none !important;
+  }
+
+  .print-draft-status {
+    display: block;
+    color: #000;
+    font-size: 11pt;
+  }
+
+  .print-header {
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #000;
+  }
+
+  .print-header h1 {
+    margin: 0;
+    font-size: 18pt;
+  }
+
+  .print-summary {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 10pt;
+  }
+
+  .print-rosters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px 28px;
+  }
+
+  .print-team {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-team-name {
+    margin: 0 0 4px 0;
+    font-size: 12pt;
+  }
+
+  .print-team-manager {
+    font-weight: normal;
+    font-size: 10pt;
+  }
+
+  .print-roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+
+  .print-roster-table th {
+    text-align: left;
+    border-bottom: 1px solid #000;
+    padding: 2px 4px;
+  }
+
+  .print-roster-table td {
+    padding: 2px 4px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .print-col-round {
+    width: 8%;
+  }
+
+  .print-col-pos {
+    width: 14%;
+  }
+
+  .print-col-nfl {
+    width: 16%;
+  }
+
+  .print-empty-pick td {
+    color: #888;
+  }
 }

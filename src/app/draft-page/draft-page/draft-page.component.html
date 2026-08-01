@@ -51,9 +51,14 @@
           {{ round }}
         </option>
       </select>
-      <button class="btn-edit-order" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0" (click)="startEditingOrder()">
-        ✎ Edit Order
-      </button>
+      <div class="round-actions" *ngIf="!isEditingOrder && draftPicksCollection && draftPicksCollection.length > 0">
+        <button class="btn-edit-order" (click)="startEditingOrder()">
+          Edit Order
+        </button>
+        <button class="btn-print" (click)="onPrintDraft()">
+          Print Draft
+        </button>
+      </div>
     </div>
 
     <app-draft-order-editor 
@@ -70,6 +75,43 @@
             (cardClicked)="onDraftCardClicked($event)">
         </app-draft-card>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden on screen, rendered only when printing -->
+<div class="print-draft-status">
+  <div class="print-header">
+    <h1>{{ draftYear }} Draft Status</h1>
+    <div class="print-summary">
+      <span>{{ printPicksMade }} of {{ printTotalPicks }} picks made</span>
+      <span>Printed {{ printedOn }}</span>
+    </div>
+  </div>
+
+  <div class="print-rosters">
+    <div class="print-team" *ngFor="let roster of printRosters">
+      <h2 class="print-team-name">
+        {{ roster.TeamName }} <span class="print-team-manager">({{ roster.TeamManager }})</span>
+      </h2>
+      <table class="print-roster-table">
+        <thead>
+          <tr>
+            <th class="print-col-round">Rd</th>
+            <th>Player</th>
+            <th class="print-col-pos">Pos</th>
+            <th class="print-col-nfl">NFL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pick of roster.Picks" [class.print-empty-pick]="!pick.PlayerName">
+            <td class="print-col-round">{{ pick.Round }}</td>
+            <td>{{ pick.PlayerName || '—' }}</td>
+            <td class="print-col-pos">{{ pick.PlayerPosition }}</td>
+            <td class="print-col-nfl">{{ pick.PlayerNFLTeam }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

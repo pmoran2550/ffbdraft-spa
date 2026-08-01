@@ -8,3 +8,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+/* Keep app chrome off the printed page - components supply their own print views */
+@media print {
+    app-navbar { display: none !important; }
+    html, body { height: auto; }
+
+    @page { margin: 0.5in; }
+}
+
