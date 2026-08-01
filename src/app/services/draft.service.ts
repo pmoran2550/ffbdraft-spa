@@ -34,11 +34,6 @@ export class DraftService {
     return this.apiService.postRequest(requestUrl, bodyStr, headers);
   }
 
-  removeDraftPick(pickId: string): Observable<any> {
-    let requestUrl = `${BASE_API_URL}/api/draft/${pickId}`;
-    return this.apiService.deleteItem(requestUrl, undefined);
-  }
-
   updateDraftPick(pickId: string, updatedPick: draftpick): Observable<any> {
     let requestUrl = `${BASE_API_URL}/api/draft/${pickId}`;
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
