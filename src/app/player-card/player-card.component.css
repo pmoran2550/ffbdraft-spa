@@ -4,6 +4,14 @@
   background-color:lightblue;
 }
 
+.player-card ::ng-deep .mat-mdc-card-header {
+  padding: 4px 16px;
+}
+
+.player-card ::ng-deep .mat-mdc-card-header-text {
+  margin-bottom: 0;
+}
+
 .player-card.selected-player {
   background-color: #ba9bda !important;
 }
