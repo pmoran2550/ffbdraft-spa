@@ -41,9 +41,9 @@ describe('DraftPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should remove the drafted player from the filtered lists after saving', () => {
+  it('should keep the drafted player visible, marked with their new team, after saving', () => {
     const draftedPlayer = {
-      id: 1,
+      id: '1',
       name: 'QB Player',
       rank: 1,
       position: 'QB',
@@ -52,18 +52,45 @@ describe('DraftPageComponent', () => {
     } as any;
 
     component.playerData = [draftedPlayer];
-    component.filteredPlayerData = [draftedPlayer];
+    component.showAvailableOnly = false;
     component.selectedPlayer = draftedPlayer;
     component.selectedDraftPick = {
-      TeamID: 2,
+      TeamID: '2',
       TeamManager: 'Manager',
       TeamName: 'Team A'
     } as any;
 
     component.onDraftPlayer();
 
-    expect(component.playerData).not.toContain(draftedPlayer);
-    expect(component.filteredPlayerData).not.toContain(draftedPlayer);
+    expect(component.playerData).toContain(draftedPlayer);
+    expect(component.filteredPlayerData).toContain(draftedPlayer);
+    expect(draftedPlayer.ffbTeamManager).toBe('Manager');
+  });
+
+  it('should show all players in rank order when "Show only available" is unchecked', () => {
+    component.showAvailableOnly = false;
+    component.playerToFind = '';
+    component.playerData = [
+      { id: '1', name: 'Available Player', rank: 2, ffbTeamManager: 'Available' },
+      { id: '2', name: 'Drafted Player', rank: 1, ffbTeamManager: 'Team A' }
+    ] as any;
+
+    component.filter();
+
+    expect(component.filteredPlayerData.map(p => p.id)).toEqual(['2', '1']);
+  });
+
+  it('should hide drafted players when "Show only available" is checked', () => {
+    component.showAvailableOnly = true;
+    component.playerToFind = '';
+    component.playerData = [
+      { id: '1', name: 'Available Player', rank: 2, ffbTeamManager: 'Available' },
+      { id: '2', name: 'Drafted Player', rank: 1, ffbTeamManager: 'Team A' }
+    ] as any;
+
+    component.filter();
+
+    expect(component.filteredPlayerData.map(p => p.id)).toEqual(['1']);
   });
 
   it('should group picks into one roster per team, in draft order', () => {

@@ -382,14 +382,23 @@ export class DraftPageComponent implements OnInit {
 
     // Create a subscription to handle the draft pick update
     this.isSaving = true;
-    this.draftService.addDraftPick(this.selectedDraftPick).pipe(
+    const saveRequest = this.selectedDraftPick.id
+      ? this.draftService.updateDraftPick(this.selectedDraftPick.id, this.selectedDraftPick)
+      : this.draftService.addDraftPick(this.selectedDraftPick);
+    saveRequest.pipe(
       finalize(() => {
         this.isSaving = false;
         this.cdr.detectChanges();
       })
     ).subscribe({
-      next: () => {
+      next: (resp: any) => {
         console.log('Draft pick saved successfully');
+        // Ensure the local pick carries the server-assigned id so a later
+        // re-pick on this same slot updates the existing record instead of
+        // creating a duplicate.
+        if (this.selectedDraftPick && resp?.id) {
+          this.selectedDraftPick.id = resp.id;
+        }
         // Update the player as drafted in the local data
         if (this.selectedPlayer) {
           if (this.selectedDraftPick?.TeamID && 
@@ -401,11 +410,9 @@ export class DraftPageComponent implements OnInit {
           }
         }
 
-        const draftedPlayerId = this.selectedPlayer?.id;
-        if (draftedPlayerId !== undefined) {
-          this.playerData = this.playerData.filter(player => player.id !== draftedPlayerId);
-          this.filteredPlayerData = this.filteredPlayerData.filter(player => player.id !== draftedPlayerId);
-        }
+        // Keep the drafted player in playerData (now marked with their new team) so
+        // unchecking "Show only available" still shows them, in rank order
+        this.filter();
 
         // Clear selections, then highlight the next best-available player and next open pick
         this.selectedPlayer = undefined;

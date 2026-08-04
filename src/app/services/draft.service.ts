@@ -49,7 +49,7 @@ export class DraftService {
       "ffbTeamManager": updatedPick.TeamManager,
       "year": updatedPick.Year
     }
-    return this.apiService.putRequest(requestUrl, updatedPick, headers);
+    return this.apiService.putRequest(requestUrl, bodyStr, headers);
   }
 
   deleteDraftPick(pickId: string): Observable<any> {
