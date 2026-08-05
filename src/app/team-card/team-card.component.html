@@ -8,6 +8,9 @@
             <div class="content-item">Nickname: {{ team.nickname}}</div>  
             <div class="content-item">Email: {{ team.email}}</div>
             <div class="content-item" *ngIf="isEditing">
+                <button mat-icon-button (click)="editTeam(team)" >
+                    <mat-icon>edit</mat-icon>
+                </button>
                 <button mat-icon-button (click)="deleteTeam(team.id)" >
                     <mat-icon>delete</mat-icon>
                 </button>

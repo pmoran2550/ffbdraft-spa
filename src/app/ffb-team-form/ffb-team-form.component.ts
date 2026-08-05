@@ -1,8 +1,8 @@
 import { NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -23,19 +23,23 @@ export class FfbTeamFormComponent implements OnInit, OnDestroy {
   private addTeamSubscription?: Subscription;
   postErrorMsg: string = '';
   isErrorResponse: boolean = false;
-  
+  isEditMode: boolean = false;
+
   constructor(
-    private fb: FormBuilder, 
-    public dialogRef: MatDialogRef<FfbTeamFormComponent>, 
-    private teamService: TeamService) { }
+    private fb: FormBuilder,
+    public dialogRef: MatDialogRef<FfbTeamFormComponent>,
+    private teamService: TeamService,
+    @Inject(MAT_DIALOG_DATA) public data: ffbteam | undefined) {
+      this.isEditMode = !!this.data;
+    }
 
   ngOnInit(): void {
     this.newTeamForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(30)]],
-      manager: ['', [Validators.required, Validators.maxLength(30)]],
-      email: ['', [Validators.required, Validators.email, Validators.maxLength(30)]],
-      thirdpartyid: ['', Validators.maxLength(35)],
-      nickname: ['', Validators.maxLength(30)]
+      name: [this.data?.name ?? '', [Validators.required, Validators.maxLength(30)]],
+      manager: [this.data?.manager ?? '', [Validators.required, Validators.maxLength(30)]],
+      email: [this.data?.email ?? '', [Validators.required, Validators.email, Validators.maxLength(30)]],
+      thirdpartyid: [this.data?.thirdpartyid ?? '', Validators.maxLength(35)],
+      nickname: [this.data?.nickname ?? '', Validators.maxLength(30)]
     });
   }
 
@@ -44,18 +48,36 @@ export class FfbTeamFormComponent implements OnInit, OnDestroy {
   onSubmit() {
     if (this.newTeamForm.valid) {
       this.isErrorResponse = false;
-      let newTeam: ffbteam = this.newTeamForm.value;
-      newTeam.id = '00000000-0000-0000-0000-000000000000';
-      this.addTeamSubscription = this.teamService.addTeam(newTeam).subscribe({
-        next: (resp) => { 
-          this.dialogRef.close(this.newTeamForm.value);
-        },
-        error: (error) => {
-          this.postErrorMsg = 'Error adding team: ' + error.statusText;
-          this.isErrorResponse = true;
-          console.error('Error in post request: ', error);
-        }
-      });
+
+      if (this.isEditMode && this.data) {
+        let updatedTeam: ffbteam = {
+          ...this.data,
+          ...this.newTeamForm.value
+        };
+        this.addTeamSubscription = this.teamService.putTeamUpdate(this.data.id, updatedTeam).subscribe({
+          next: (resp) => {
+            this.dialogRef.close(updatedTeam);
+          },
+          error: (error) => {
+            this.postErrorMsg = 'Error updating team: ' + error.statusText;
+            this.isErrorResponse = true;
+            console.error('Error in put request: ', error);
+          }
+        });
+      } else {
+        let newTeam: ffbteam = this.newTeamForm.value;
+        newTeam.id = '00000000-0000-0000-0000-000000000000';
+        this.addTeamSubscription = this.teamService.addTeam(newTeam).subscribe({
+          next: (resp) => {
+            this.dialogRef.close(this.newTeamForm.value);
+          },
+          error: (error) => {
+            this.postErrorMsg = 'Error adding team: ' + error.statusText;
+            this.isErrorResponse = true;
+            console.error('Error in post request: ', error);
+          }
+        });
+      }
     } else {
       console.log('Form is invalid.');
     }

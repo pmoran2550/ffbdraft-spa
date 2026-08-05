@@ -41,10 +41,11 @@ export class TeamPageComponent implements OnDestroy {
     this.teamData$ = this.teamservice.getTeams();
   }
 
-  openTeamForm(): void {
+  openTeamForm(team?: ffbteam): void {
     this.dialog.open(FfbTeamFormComponent, {
       height: '650px',
-      width: '600px'
+      width: '600px',
+      data: team
     })
     .afterClosed().pipe(takeUntil(this.destroy$))
     .subscribe(result => {
@@ -53,6 +54,10 @@ export class TeamPageComponent implements OnDestroy {
       }
       this.getTeamData();
     });
+  }
+
+  editTeam(team: ffbteam): void {
+    this.openTeamForm(team);
   }
 
   removeTeam(teamId: any): void {

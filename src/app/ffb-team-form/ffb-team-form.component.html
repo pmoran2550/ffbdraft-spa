@@ -1,4 +1,4 @@
-<h1 mat-dialog-title class="header-class">New Team</h1>
+<h1 mat-dialog-title class="header-class">{{ isEditMode ? 'Edit Team' : 'New Team' }}</h1>
 <div mat-dialog-content>
 
   <form [formGroup]="newTeamForm" (ngSubmit)="onSubmit()">

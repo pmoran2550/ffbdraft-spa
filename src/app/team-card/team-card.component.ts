@@ -22,8 +22,15 @@ export class TeamCardComponent {
 
     @Output()
     removeEvent = new EventEmitter<any>();
-  
+
+    @Output()
+    editEvent = new EventEmitter<ffbteam>();
+
     deleteTeam(teamId: any): void {
       this.removeEvent.emit(teamId);
+    }
+
+    editTeam(team: ffbteam): void {
+      this.editEvent.emit(team);
     }
 }
