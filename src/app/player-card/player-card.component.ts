@@ -63,16 +63,12 @@ export class PlayerCardComponent {
     })
     .afterClosed().pipe(takeUntil(this.destroy$))
     .subscribe(result => {
+      this.isEditing = false;
       if (result) {
-        this.isEditing = false;
         let newTeam: ffbteam = result['teams'];
         this.updateFFBTeam(newTeam);
       }
     });
-  }
-  
-  cancelFFBTeamEdit(): void {
-    this.isEditing = false;
   }
 
   updateFFBTeam(team: ffbteam): void {
