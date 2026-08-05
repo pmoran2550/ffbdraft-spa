@@ -172,9 +172,3 @@
     overflow: auto;
     gap: 1px;
 }
-
-.expand-collapse-button {
-    display: flex;
-    width: 40%;
-    margin: 20px auto;
-}
